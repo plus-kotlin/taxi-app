@@ -1,0 +1,10 @@
+FROM openjdk:17-jdk-slim-buster
+WORKDIR /app
+EXPOSE 8080
+ARG JAR_FILE_PATH=build/libs/*.jar
+COPY ${JAR_FILE_PATH} app.jar
+ARG SPRING_PROFILES_ACTIVE
+ARG JASYPT_ENCRYPTOR_PASSWORD
+ENV PROFILES=${SPRING_PROFILES_ACTIVE}
+ENV PASSWORD=${JASYPT_ENCRYPTOR_PASSWORD}
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILES}", "-Djasypt.encryptor.password=${PASSWORD}", "/app/app.jar"]

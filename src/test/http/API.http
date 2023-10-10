@@ -1,0 +1,3 @@
+GET {{host}}/actuator/health
+Accept: application/json
+###

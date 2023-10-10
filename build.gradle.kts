@@ -45,6 +45,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("com.h2database:h2")
+    runtimeOnly("com.mysql:mysql-connector-j")
     annotationProcessor("org.projectlombok:lombok")
 
     implementation("com.querydsl:querydsl-jpa:${Versions.QUERY_DSL}:jakarta")
@@ -53,9 +54,9 @@ dependencies {
     testAnnotationProcessor("com.querydsl:querydsl-apt:${Versions.QUERY_DSL}:jakarta")
     testAnnotationProcessor("jakarta.persistence:jakarta.persistence-api")
     testImplementation("com.querydsl:querydsl-jpa:${Versions.QUERY_DSL}:jakarta")
-
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs += "-Xjsr305=strict"

@@ -1,0 +1,95 @@
+name: Continuous Delivery Dev
+
+on:
+  pull_request:
+    types: [ closed ]
+    branches: [ "dev" ]
+
+env:
+  ecr_url: ${{secrets.ECR_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/${{secrets.ECR_DEV_REPO}}
+  role_arn: ${{secrets.ROLE_ARN}}
+  aws_region: ${{secrets.AWS_REGION}}
+  ecr_repo: ${{secrets.ECR_DEV_REPO}}
+  jasypt_password: ${{secrets.JASYPT_PASSWORD}}
+  container_name: taxi-container
+  ecs_cluster: taxi-cluster
+  ecs_service: taxi-service-dev
+  task_definition: taxi-app-task
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  job:
+    if: github.event.pull_request.merged == true
+    name: Build And Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: CheckoutRepository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials ROLE ARN
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.aws_region }}
+          role-to-assume: ${{ env.role_arn }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          cache: 'gradle'
+
+      - name: Give permission for Gradle
+        run: chmod +x gradlew
+
+      - name: Run gradle build
+        run: ./gradlew clean build
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+
+      - name: Push docker image to ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: latest
+        run: |
+          docker buildx build -t $ECR_REGISTRY/${{ env.ecr_repo }}:$IMAGE_TAG --build-arg SPRING_PROFILES_ACTIVE=dev --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ env.jasypt_password }} .
+          docker push $ECR_REGISTRY/${{ env.ecr_repo }}:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/${{ env.ecr_repo }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Download task definition
+        id: download-task
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ env.task_definition }} --query taskDefinition > task-definition.json
+          echo $(cat task-definition.json | jq 'del(
+                  .taskDefinitionArn,
+                  .requiresAttributes,
+                  .compatibilities,
+                  .revision,
+                  .status,
+                  .registeredAt,
+                  .registeredBy
+              )') > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ env.container_name }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ecs_service }}
+          cluster: ${{ env.ecs_cluster }}

@@ -2,7 +2,7 @@ spring:
   jpa:
     database: h2
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     open-in-view: false
     properties:
       hibernate:
@@ -10,10 +10,8 @@ spring:
         format_sql: true
         use_sql_comments: true
   datasource:
-    url: jdbc:h2:mem:test
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
+    hikari:
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+      jdbc-url: jdbc:h2:mem:testdb

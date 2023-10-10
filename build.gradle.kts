@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
-    kotlin("kapt") version kotlinVersion
+    kotlin("kapt") version "1.8.22"
 }
 
 group = "com.plus"
@@ -37,13 +37,12 @@ dependencies {
         exclude(module= "spring-boot-starter-tomcat")
     }
     implementation("org.springframework.boot:spring-boot-starter-undertow")
-
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
@@ -55,15 +54,7 @@ dependencies {
     testAnnotationProcessor("com.querydsl:querydsl-apt:${Versions.QUERY_DSL}:jakarta")
     testAnnotationProcessor("jakarta.persistence:jakarta.persistence-api")
     testImplementation("com.querydsl:querydsl-jpa:${Versions.QUERY_DSL}:jakarta")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
-
-    implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
-
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
-
-tasks.getByName<Jar>("jar") {
-    enabled = false
 }
 
 tasks.withType<KotlinCompile> {
@@ -75,5 +66,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    systemProperty("jasypt.encryptor.password", "password")
 }

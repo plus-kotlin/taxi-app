@@ -19,7 +19,7 @@ class MemberApi(
         @RequestBody request: MemberRegisterAccountRequest,
     ): MemberRegisterAccountResponse {
         val response = memberRegisterPayment.registerAccount(PaymentCommand.RegisterAccount(
-            userId = request.userId,
+            memberId = request.memberId,
             accountNum = request.accountNum,
             accountPassword = request.accountPassword,
             accountHolder = request.accountHolder,

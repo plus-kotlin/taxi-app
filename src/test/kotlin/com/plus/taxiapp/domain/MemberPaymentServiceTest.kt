@@ -25,7 +25,7 @@ class MemberPaymentServiceTest {
     private lateinit var memberPaymentService: MemberPaymentService
 
     private val registerAccount = PaymentCommand.RegisterAccount(
-        userId = 4321,
+        memberId = 4321,
         accountNum = "1234-5678-9",
         accountPassword = "1234",
         accountHolder = "최원빈",
@@ -34,7 +34,7 @@ class MemberPaymentServiceTest {
         isDefault = true,
     )
     private val account = Account(
-        userId = registerAccount.userId,
+        memberId = registerAccount.memberId,
         accountNum = registerAccount.accountNum,
         accountPassword = registerAccount.accountPassword,
         accountHolder = registerAccount.accountHolder,
@@ -70,7 +70,7 @@ class MemberPaymentServiceTest {
     fun `계좌 등록 요청 데이터 검증`() {
         val msg = assertThrows<IllegalArgumentException> {
             PaymentCommand.RegisterAccount(
-                userId = 4321,
+                memberId = 4321,
                 accountNum = "",
                 accountPassword = "1234",
                 accountHolder = "최원빈",

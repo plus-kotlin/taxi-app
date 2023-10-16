@@ -2,7 +2,7 @@ package com.plus.taxiapp.domain.command
 
 class PaymentCommand {
     data class RegisterAccount(
-        val userId: Long,
+        val memberId: Long,
         val accountNum: String,
         val accountPassword: String,
         val accountHolder: String,

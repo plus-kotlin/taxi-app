@@ -1,7 +1,7 @@
 package com.plus.taxiapp.api.member.request
 
 data class MemberRegisterAccountRequest(
-    val userId: Long,
+    val memberId: Long,
     val accountNum: String,
     val accountPassword: String,
     val accountHolder: String,

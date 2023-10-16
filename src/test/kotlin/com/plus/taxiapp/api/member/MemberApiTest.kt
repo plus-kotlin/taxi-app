@@ -28,7 +28,7 @@ class MemberApiTest @Autowired constructor(
     private lateinit var memberPaymentService: MemberPaymentService
 
     private val request = MemberRegisterAccountRequest(
-        userId = 4321,
+        memberId = 4321,
         accountPassword = "1234",
         accountNum = "1234-5678-9",
         accountHolder = "최원빈",
@@ -50,7 +50,7 @@ class MemberApiTest @Autowired constructor(
         given(
             memberPaymentService.registerAccount(
                 PaymentCommand.RegisterAccount(
-                    userId = request.userId,
+                    memberId = request.memberId,
                     accountNum = request.accountNum,
                     accountPassword = request.accountPassword,
                     accountHolder = request.accountHolder,
@@ -60,7 +60,7 @@ class MemberApiTest @Autowired constructor(
                 )
             )
         ).willReturn(Account(
-            userId = request.userId,
+            memberId = request.memberId,
             accountNum = request.accountNum,
             accountPassword = request.accountPassword,
             accountHolder = request.accountHolder,

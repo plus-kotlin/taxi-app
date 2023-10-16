@@ -21,6 +21,7 @@ class MemberApi(
         val response = memberRegisterPayment.registerAccount(PaymentCommand.RegisterAccount(
             userId = request.userId,
             accountNum = request.accountNum,
+            accountPassword = request.accountPassword,
             accountHolder = request.accountHolder,
             accountHolderInfo = request.accountHolderInfo,
             bankName = request.bankName,

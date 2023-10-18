@@ -1,9 +1,10 @@
 package com.plus.taxiapp.api.member
 
-import com.plus.taxiapp.api.member.request.MemberRegisterAccountRequest
-import com.plus.taxiapp.api.member.response.MemberRegisterAccountResponse
-import com.plus.taxiapp.domain.MemberPaymentService
+import com.plus.taxiapp.api.member.request.RegisterAccountRequest
+import com.plus.taxiapp.api.member.response.RegisterAccountResponse
+import com.plus.taxiapp.domain.PaymentService
 import com.plus.taxiapp.domain.command.PaymentCommand
+import com.plus.taxiapp.facade.MemberFacade
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/member/")
 class MemberApi(
-    private val memberRegisterPayment: MemberPaymentService,
+    private val memberFacade: MemberFacade,
 ) {
     @PostMapping("/register/account")
     fun registerAccount(
-        @RequestBody request: MemberRegisterAccountRequest,
-    ): MemberRegisterAccountResponse {
-        val response = memberRegisterPayment.registerAccount(PaymentCommand.RegisterAccount(
+        @RequestBody request: RegisterAccountRequest,
+    ): RegisterAccountResponse {
+        val response = memberFacade.registerAccount(PaymentCommand.RegisterAccount(
             memberId = request.memberId,
             accountNum = request.accountNum,
             accountPassword = request.accountPassword,
@@ -28,7 +29,7 @@ class MemberApi(
             isDefault = request.isDefault,
         ))
 
-        return MemberRegisterAccountResponse(
+        return RegisterAccountResponse(
             accountNum = response.accountNum,
             accountHolder = response.accountHolder,
             bankName = response.bankName,

@@ -1,5 +1,5 @@
 package com.plus.taxiapp.domain
 
-interface MemberPaymentRepository {
+interface PaymentRepository {
     fun saveAccount(account: Account): Account
 }

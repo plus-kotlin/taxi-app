@@ -1,11 +1,12 @@
 package com.plus.taxiapp.api.member
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.plus.taxiapp.api.member.request.MemberRegisterAccountRequest
-import com.plus.taxiapp.api.member.response.MemberRegisterAccountResponse
+import com.plus.taxiapp.api.member.request.RegisterAccountRequest
+import com.plus.taxiapp.api.member.response.RegisterAccountResponse
 import com.plus.taxiapp.domain.Account
-import com.plus.taxiapp.domain.MemberPaymentService
+import com.plus.taxiapp.domain.PaymentService
 import com.plus.taxiapp.domain.command.PaymentCommand
+import com.plus.taxiapp.facade.MemberFacade
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,9 +26,9 @@ class MemberApiTest @Autowired constructor(
     private val objectMapper: ObjectMapper
 ){
     @MockBean
-    private lateinit var memberPaymentService: MemberPaymentService
+    private lateinit var memberFacade: MemberFacade
 
-    private val request = MemberRegisterAccountRequest(
+    private val request = RegisterAccountRequest(
         memberId = 4321,
         accountPassword = "1234",
         accountNum = "1234-5678-9",
@@ -36,7 +37,7 @@ class MemberApiTest @Autowired constructor(
         bankName = "신한은행",
         isDefault = true,
     )
-    private val response = MemberRegisterAccountResponse(
+    private val response = RegisterAccountResponse(
         accountNum = request.accountNum,
         accountHolder = request.accountHolder,
         bankName = request.bankName,
@@ -48,7 +49,7 @@ class MemberApiTest @Autowired constructor(
     fun `registerAccount(), 사용자는 택시 이용을 위해 계좌 정보를 저장한다`() {
         val uri = "/api/member/register/account"
         given(
-            memberPaymentService.registerAccount(
+            memberFacade.registerAccount(
                 PaymentCommand.RegisterAccount(
                     memberId = request.memberId,
                     accountNum = request.accountNum,

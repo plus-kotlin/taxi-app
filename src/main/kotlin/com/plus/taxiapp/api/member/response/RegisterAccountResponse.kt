@@ -1,6 +1,6 @@
 package com.plus.taxiapp.api.member.response
 
-data class MemberRegisterAccountResponse(
+data class RegisterAccountResponse(
     val accountNum: String,
     val accountHolder: String,
     val bankName: String,

@@ -1,20 +1,20 @@
 package com.plus.taxiapp.infra.store.payment
 
 import com.plus.taxiapp.domain.Account
-import com.plus.taxiapp.domain.MemberPaymentRepository
+import com.plus.taxiapp.domain.PaymentRepository
 import com.plus.taxiapp.infra.store.member.MemberJpaRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
- class MemberPaymentRepositoryImpl(
+ class PaymentRepositoryImpl(
      private val accountJpaRepository: AccountJpaRepository,
      private val memberJpaRepository: MemberJpaRepository,
- ): MemberPaymentRepository {
+ ): PaymentRepository {
     override fun saveAccount(account: Account): Account {
         val memberId = account.memberId
         val findMember = memberJpaRepository.findByIdOrNull(memberId) ?: throw NullPointerException("Not Found Member")
-        val saveMember = accountJpaRepository.save(AccountEntity(
+        val saveAccount = accountJpaRepository.save(AccountEntity(
             accountNum = account.accountNum,
             accountPassword = account.accountPassword,
             accountHolder = account.accountHolder,
@@ -26,14 +26,15 @@ import org.springframework.stereotype.Repository
         ))
 
         return Account(
-            memberId = saveMember.memberEntity.id,
-            accountNum = saveMember.accountNum,
-            accountPassword = saveMember.accountPassword,
-            accountHolder = saveMember.accountHolder,
-            accountHolderInfo = saveMember.accountHolderInfo,
-            bankName = saveMember.bankName,
-            isDefault = saveMember.isDefault,
-            isVerified = saveMember.isVerified,
+            id = saveAccount.id,
+            memberId = saveAccount.memberEntity.id!!,
+            accountNum = saveAccount.accountNum,
+            accountPassword = saveAccount.accountPassword,
+            accountHolder = saveAccount.accountHolder,
+            accountHolderInfo = saveAccount.accountHolderInfo,
+            bankName = saveAccount.bankName,
+            isDefault = saveAccount.isDefault,
+            isVerified = saveAccount.isVerified,
         )
     }
 }

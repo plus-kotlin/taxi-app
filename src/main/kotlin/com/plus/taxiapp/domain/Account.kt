@@ -1,7 +1,8 @@
 package com.plus.taxiapp.domain
 
 data class Account(
-    val memberId: Long?,
+    val id: Long? = null,
+    val memberId: Long,
     val accountNum: String,
     val accountPassword: String,
     val accountHolder: String,

@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class MemberPaymentRepositoryImplTest @Autowired constructor(
+class PaymentRepositoryImplTest @Autowired constructor(
     private val memberJpaRepository: MemberJpaRepository,
-    private val memberPaymentRepositoryImpl: MemberPaymentRepositoryImpl,
+    private val paymentRepositoryImpl: PaymentRepositoryImpl,
 ) {
 
     private lateinit var account: Account
@@ -26,7 +26,8 @@ class MemberPaymentRepositoryImplTest @Autowired constructor(
             )
         )
         account = Account(
-            memberId = member.id,
+            id = 1,
+            memberId = member.id!!,
             accountPassword = "1234",
             accountNum = "1234-5678-9",
             accountHolder = "최원빈",
@@ -38,7 +39,7 @@ class MemberPaymentRepositoryImplTest @Autowired constructor(
     }
     @Test
     fun `saveAccount(), 계좌 등록`() {
-        val returnAccount = memberPaymentRepositoryImpl.saveAccount(account)
+        val returnAccount = paymentRepositoryImpl.saveAccount(account)
         assertThat(returnAccount).isEqualTo(account)
     }
 }

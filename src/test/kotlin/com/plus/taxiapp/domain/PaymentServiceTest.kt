@@ -13,16 +13,16 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 
 @ExtendWith(MockitoExtension::class)
-class MemberPaymentServiceTest {
+class PaymentServiceTest {
 
     @Mock
-    private lateinit var memberPaymentRepository: MemberPaymentRepository
+    private lateinit var paymentRepository: PaymentRepository
 
     @Mock
     private lateinit var validationMiddleWare: ValidationMiddleWare
 
     @InjectMocks
-    private lateinit var memberPaymentService: MemberPaymentService
+    private lateinit var paymentService: PaymentService
 
     private val registerAccount = PaymentCommand.RegisterAccount(
         memberId = 4321,
@@ -46,8 +46,8 @@ class MemberPaymentServiceTest {
 
     @Test
     fun `registerAccount(), 계좌 등록`() {
-        given(memberPaymentRepository.saveAccount(any())).willReturn(account)
-        assertThat(memberPaymentService.registerAccount(registerAccount)).isEqualTo(account)
+        given(paymentRepository.saveAccount(any())).willReturn(account)
+        assertThat(paymentService.registerAccount(registerAccount)).isEqualTo(account)
     }
 
     @Test
@@ -60,7 +60,7 @@ class MemberPaymentServiceTest {
         ).willThrow(IllegalArgumentException("Validation Middle Ware Exception"))
 
         val msg = assertThrows<IllegalArgumentException> {
-            memberPaymentService.registerAccount(registerAccount)
+            paymentService.registerAccount(registerAccount)
         }.message
 
         assertThat(msg).isEqualTo("Validation Middle Ware Exception")

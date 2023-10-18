@@ -5,13 +5,13 @@ import com.plus.taxiapp.infra.middleware.validation.ValidationMiddleWare
 import org.springframework.stereotype.Service
 
 @Service
-class MemberPaymentService(
-    private val memberPaymentRepository: MemberPaymentRepository,
+class PaymentService(
+    private val paymentRepository: PaymentRepository,
     private val validationMiddleWare: ValidationMiddleWare,
 ) {
     fun registerAccount(request: PaymentCommand.RegisterAccount): Account {
         validationMiddleWare.validationAccount(request.accountNum, request.accountPassword)
-        return memberPaymentRepository.saveAccount(
+        return paymentRepository.saveAccount(
             Account(
                 memberId = request.memberId,
                 accountNum = request.accountNum,

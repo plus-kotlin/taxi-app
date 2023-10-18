@@ -1,8 +1,11 @@
 package com.plus.taxiapp.facade
 
-import com.plus.taxiapp.domain.*
-import com.plus.taxiapp.domain.command.PaymentCommand
+import com.plus.taxiapp.domain.member.*
+import com.plus.taxiapp.domain.member.command.PaymentCommand
 import org.springframework.stereotype.Component
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 @Component
 class MemberFacade(
@@ -31,5 +34,20 @@ class MemberFacade(
             )
         }
         return registerCard
+    }
+
+    fun paymentFare(memberId: Long, drivingRecordId: Long, fare: Double): LocalDateTime {
+        // TODO("운행 기록(DrivingRecord) 확인(조회)")
+
+        val findMember = memberService.findMember(memberId)
+        if(findMember.defaultPaymentId == null) {
+            throw NullPointerException("Not Found Payment Method Info")
+        }
+
+        // 결제 진행
+        paymentService.paymentFare(findMember.defaultPaymentType, findMember.defaultPaymentId)
+
+        // TODO("운행 기록(DrivingRecord)의 상태를 결제 완료 상태로 update")
+        return LocalDateTime.now()
     }
 }

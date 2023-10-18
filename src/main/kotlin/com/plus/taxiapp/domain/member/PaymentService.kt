@@ -1,6 +1,7 @@
-package com.plus.taxiapp.domain
+package com.plus.taxiapp.domain.member
 
-import com.plus.taxiapp.domain.command.PaymentCommand
+import com.plus.taxiapp.domain.member.command.PaymentCommand
+import com.plus.taxiapp.infra.middleware.payment.PaymentMiddleWare
 import com.plus.taxiapp.infra.middleware.validation.ValidationMiddleWare
 import org.springframework.stereotype.Service
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service
 class PaymentService(
     private val paymentRepository: PaymentRepository,
     private val validationMiddleWare: ValidationMiddleWare,
+    private val paymentMiddleWare: PaymentMiddleWare,
 ) {
     fun registerAccount(request: PaymentCommand.RegisterAccount): Account {
         validationMiddleWare.validationAccount(request.accountNum, request.accountPassword)
@@ -39,5 +41,19 @@ class PaymentService(
                 isVerified = true,
             )
         )
+    }
+
+    fun paymentFare(paymentType: PaymentType?, paymentId: Long?) {
+        when (paymentType) {
+            PaymentType.ACCOUNT -> {
+                val findAccount = paymentRepository.findAccount(paymentId!!)
+                paymentMiddleWare.paymentByAccount(findAccount.accountNum, findAccount.accountPassword)
+            }
+            PaymentType.CARD -> {
+                val findCard = paymentRepository.findCard(paymentId!!)
+                paymentMiddleWare.paymentByCard(findCard.cardNum, findCard.cardPassword, findCard.cvc, findCard.expirationDate)
+            }
+            else -> throw IllegalArgumentException("Payment Type Info Error")
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.plus.taxiapp.domain.command
+package com.plus.taxiapp.domain.member.command
 
 class PaymentCommand {
     data class RegisterAccount(

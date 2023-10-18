@@ -1,4 +1,4 @@
-package com.plus.taxiapp.domain
+package com.plus.taxiapp.domain.member
 
 data class Card(
     val id: Long? = null,

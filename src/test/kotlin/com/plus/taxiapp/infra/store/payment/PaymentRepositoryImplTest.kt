@@ -1,7 +1,7 @@
 package com.plus.taxiapp.infra.store.payment
 
-import com.plus.taxiapp.domain.Account
-import com.plus.taxiapp.domain.Card
+import com.plus.taxiapp.domain.member.Account
+import com.plus.taxiapp.domain.member.Card
 import com.plus.taxiapp.infra.store.member.MemberEntity
 import com.plus.taxiapp.infra.store.member.MemberJpaRepository
 import org.assertj.core.api.Assertions.assertThat

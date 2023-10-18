@@ -3,11 +3,12 @@ package com.plus.taxiapp.api.member
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.plus.taxiapp.api.member.request.RegisterAccountRequest
 import com.plus.taxiapp.api.member.request.RegisterCardRequest
+import com.plus.taxiapp.api.member.response.PaymentResponse
 import com.plus.taxiapp.api.member.response.RegisterAccountResponse
 import com.plus.taxiapp.api.member.response.RegisterCardResponse
-import com.plus.taxiapp.domain.Account
-import com.plus.taxiapp.domain.Card
-import com.plus.taxiapp.domain.command.PaymentCommand
+import com.plus.taxiapp.domain.member.Account
+import com.plus.taxiapp.domain.member.Card
+import com.plus.taxiapp.domain.member.command.PaymentCommand
 import com.plus.taxiapp.facade.MemberFacade
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -17,9 +18,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.LocalDateTime
 
 @WebMvcTest(MemberApi::class)
 @AutoConfigureMockMvc
@@ -46,24 +49,6 @@ class MemberApiTest @Autowired constructor(
         isDefault = accountRequest.isDefault,
         isVerified = true,
     )
-
-    private val cardRequest = RegisterCardRequest(
-        memberId = 4321,
-        cardNum = "4321-1234-1222",
-        cardPassword = "1234",
-        expirationDate = "2023-01-01",
-        cvc = 777,
-        bankName = "신한은행",
-        isDefault = true,
-    )
-    private val cardResponse = RegisterCardResponse(
-        cardNum = cardRequest.cardNum,
-        expirationDate = cardRequest.expirationDate,
-        bankName = cardRequest.bankName,
-        isDefault = cardRequest.isDefault,
-        isVerified = true,
-    )
-
     @Test
     fun `registerAccount(), 사용자는 택시 이용을 위해 계좌 정보를 저장한다`() {
         val uri = "/api/member/register/account"
@@ -105,6 +90,22 @@ class MemberApiTest @Autowired constructor(
             .andDo(print())
     }
 
+    private val cardRequest = RegisterCardRequest(
+        memberId = 4321,
+        cardNum = "4321-1234-1222",
+        cardPassword = "1234",
+        expirationDate = "2023-01-01",
+        cvc = 777,
+        bankName = "신한은행",
+        isDefault = true,
+    )
+    private val cardResponse = RegisterCardResponse(
+        cardNum = cardRequest.cardNum,
+        expirationDate = cardRequest.expirationDate,
+        bankName = cardRequest.bankName,
+        isDefault = cardRequest.isDefault,
+        isVerified = true,
+    )
     @Test
     fun `registerCard(), 사용자는 택시 이용을 위해 카드 정보를 저장한다`() {
         val uri = "/api/member/register/card"
@@ -143,6 +144,30 @@ class MemberApiTest @Autowired constructor(
                 status().isOk,
                 content()
                     .json(objectMapper.writeValueAsString(cardResponse)),
+            )
+            .andDo(print())
+    }
+
+    private val paymentResponse = PaymentResponse(
+        paymentResult = "Success",
+        paymentTime = LocalDateTime.now()
+    )
+    @Test
+    fun `paymentFare(), 기등록된 결제 정보를 토대로 결제를 진행한다`() {
+        val uri = "/api/member/1/payment/1/fare/30000"
+        given(
+            memberFacade.paymentFare(1,1,30000.0)
+        ).willReturn(
+            paymentResponse.paymentTime
+        )
+
+        mockMvc.perform(
+            get(uri)
+        )
+            .andExpectAll(
+                status().isOk,
+                content()
+                    .json(objectMapper.writeValueAsString(paymentResponse)),
             )
             .andDo(print())
     }

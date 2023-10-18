@@ -1,7 +1,9 @@
 package com.plus.taxiapp.api.member
 
 import com.plus.taxiapp.api.member.request.RegisterAccountRequest
+import com.plus.taxiapp.api.member.request.RegisterCardRequest
 import com.plus.taxiapp.api.member.response.RegisterAccountResponse
+import com.plus.taxiapp.api.member.response.RegisterCardResponse
 import com.plus.taxiapp.domain.PaymentService
 import com.plus.taxiapp.domain.command.PaymentCommand
 import com.plus.taxiapp.facade.MemberFacade
@@ -32,6 +34,29 @@ class MemberApi(
         return RegisterAccountResponse(
             accountNum = response.accountNum,
             accountHolder = response.accountHolder,
+            bankName = response.bankName,
+            isDefault = response.isDefault,
+            isVerified = response.isVerified,
+        )
+    }
+
+    @PostMapping("/register/card")
+    fun registerCard(
+        @RequestBody request: RegisterCardRequest,
+    ): RegisterCardResponse {
+        val response = memberFacade.registerCard(PaymentCommand.RegisterCard(
+            memberId = request.memberId,
+            cardNum = request.cardNum,
+            cardPassword = request.cardPassword,
+            expirationDate = request.expirationDate,
+            cvc = request.cvc,
+            bankName = request.bankName,
+            isDefault = request.isDefault,
+        ))
+
+        return RegisterCardResponse(
+            cardNum = response.cardNum,
+            expirationDate = response.expirationDate,
             bankName = response.bankName,
             isDefault = response.isDefault,
             isVerified = response.isVerified,

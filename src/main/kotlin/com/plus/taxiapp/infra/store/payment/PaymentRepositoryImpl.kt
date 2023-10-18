@@ -1,7 +1,9 @@
 package com.plus.taxiapp.infra.store.payment
 
 import com.plus.taxiapp.domain.Account
+import com.plus.taxiapp.domain.Card
 import com.plus.taxiapp.domain.PaymentRepository
+import com.plus.taxiapp.infra.store.member.MemberEntity
 import com.plus.taxiapp.infra.store.member.MemberJpaRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
@@ -9,11 +11,11 @@ import org.springframework.stereotype.Repository
 @Repository
  class PaymentRepositoryImpl(
      private val accountJpaRepository: AccountJpaRepository,
+     private val cardJpaRepository: CardJpaRepository,
      private val memberJpaRepository: MemberJpaRepository,
  ): PaymentRepository {
     override fun saveAccount(account: Account): Account {
-        val memberId = account.memberId
-        val findMember = memberJpaRepository.findByIdOrNull(memberId) ?: throw NullPointerException("Not Found Member")
+        val findMember = findMemberEntity(account.memberId)
         val saveAccount = accountJpaRepository.save(AccountEntity(
             accountNum = account.accountNum,
             accountPassword = account.accountPassword,
@@ -37,4 +39,35 @@ import org.springframework.stereotype.Repository
             isVerified = saveAccount.isVerified,
         )
     }
+
+    override fun saveCard(card: Card): Card {
+        val findMember = findMemberEntity(card.memberId)
+        val saveCard = cardJpaRepository.save(CardEntity(
+            cardNum = card.cardNum,
+            cardPassword = card.cardPassword,
+            expirationDate = card.expirationDate,
+            cvc = card.cvc,
+            bankName = card.bankName,
+            isDefault = card.isDefault,
+            isVerified = card.isVerified,
+            memberEntity = findMember,
+        ))
+
+        return Card(
+            id = saveCard.id,
+            memberId = saveCard.memberEntity.id!!,
+            cardNum = saveCard.cardNum,
+            cardPassword = saveCard.cardPassword,
+            expirationDate = saveCard.expirationDate,
+            cvc = saveCard.cvc,
+            bankName = saveCard.bankName,
+            isDefault = saveCard.isDefault,
+            isVerified = saveCard.isVerified,
+        )
+    }
+
+    private fun findMemberEntity(memberId: Long): MemberEntity {
+        return memberJpaRepository.findByIdOrNull(memberId) ?: throw NullPointerException("Not Found Member")
+    }
+
 }

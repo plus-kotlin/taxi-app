@@ -34,13 +34,33 @@ class PaymentServiceTest {
         isDefault = true,
     )
     private val account = Account(
-        memberId = registerAccount.memberId,
+        memberId = registerAccount.memberId!!,
         accountNum = registerAccount.accountNum,
         accountPassword = registerAccount.accountPassword,
         accountHolder = registerAccount.accountHolder,
         accountHolderInfo = registerAccount.accountHolderInfo,
         bankName = registerAccount.bankName,
         isDefault = registerAccount.isDefault,
+        isVerified = true,
+    )
+
+    private val registerCard = PaymentCommand.RegisterCard(
+        memberId = 4321,
+        cardNum = "4321-1234-1222",
+        cardPassword = "1234",
+        expirationDate = "2023-01-01",
+        cvc = 777,
+        bankName = "신한은행",
+        isDefault = true,
+    )
+    private val card = Card(
+        memberId = registerCard.memberId!!,
+        cardNum = registerCard.cardNum,
+        cardPassword = registerCard.cardPassword,
+        expirationDate = registerCard.expirationDate,
+        cvc = registerCard.cvc!!,
+        bankName = registerCard.bankName,
+        isDefault = registerCard.isDefault,
         isVerified = true,
     )
 
@@ -81,6 +101,47 @@ class PaymentServiceTest {
         }.message
 
         assertThat(msg).isEqualTo("Account Number is Required")
+    }
+
+    @Test
+    fun `registerCard(), 카드 등록`() {
+        given(paymentRepository.saveCard(any())).willReturn(card)
+        assertThat(paymentService.registerCard(registerCard)).isEqualTo(card)
+    }
+
+    @Test
+    fun `validationCard(), 카드 검증 실패`() {
+        given(
+            validationMiddleWare.validationCard(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        ).willThrow(IllegalArgumentException("Validation Middle Ware Exception"))
+
+        val msg = assertThrows<IllegalArgumentException> {
+            paymentService.registerCard(registerCard)
+        }.message
+
+        assertThat(msg).isEqualTo("Validation Middle Ware Exception")
+    }
+
+    @Test
+    fun `카드 등록 요청 데이터 검증`() {
+        val msg = assertThrows<IllegalArgumentException> {
+            PaymentCommand.RegisterCard(
+                memberId = 4321,
+                cardNum = "",
+                cardPassword = "1234",
+                expirationDate = "2023-01-01",
+                cvc = 777,
+                bankName = "신한은행",
+                isDefault = true,
+            )
+        }.message
+
+        assertThat(msg).isEqualTo("Card Number is Required")
     }
 
 }

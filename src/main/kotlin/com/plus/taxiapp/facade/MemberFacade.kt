@@ -1,9 +1,6 @@
 package com.plus.taxiapp.facade
 
-import com.plus.taxiapp.domain.Account
-import com.plus.taxiapp.domain.PaymentService
-import com.plus.taxiapp.domain.MemberService
-import com.plus.taxiapp.domain.PaymentType
+import com.plus.taxiapp.domain.*
 import com.plus.taxiapp.domain.command.PaymentCommand
 import org.springframework.stereotype.Component
 
@@ -16,5 +13,11 @@ class MemberFacade(
         val registerAccount = paymentService.registerAccount(request)
         memberService.updateDefaultPayment(memberId = registerAccount.memberId, type = PaymentType.ACCOUNT, paymentId = registerAccount.id!!)
         return registerAccount
+    }
+
+    fun registerCard(request: PaymentCommand.RegisterCard): Card {
+        val registerCard = paymentService.registerCard(request)
+        memberService.updateDefaultPayment(memberId = registerCard.memberId, type = PaymentType.CARD, paymentId = registerCard.id!!)
+        return registerCard
     }
 }

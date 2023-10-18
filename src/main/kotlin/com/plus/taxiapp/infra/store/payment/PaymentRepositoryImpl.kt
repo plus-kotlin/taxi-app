@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository
  ): PaymentRepository {
     override fun saveAccount(account: Account): Account {
         val findMember = findMemberEntity(account.memberId)
+        if(!account.isDefault && findMember.defaultPaymentId == null) {
+            account.isDefault = true
+        }
         val saveAccount = accountJpaRepository.save(AccountEntity(
             accountNum = account.accountNum,
             accountPassword = account.accountPassword,
@@ -42,6 +45,9 @@ import org.springframework.stereotype.Repository
 
     override fun saveCard(card: Card): Card {
         val findMember = findMemberEntity(card.memberId)
+        if(!card.isDefault && findMember.defaultPaymentId == null) {
+            card.isDefault = true
+        }
         val saveCard = cardJpaRepository.save(CardEntity(
             cardNum = card.cardNum,
             cardPassword = card.cardPassword,

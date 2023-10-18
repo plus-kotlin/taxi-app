@@ -11,13 +11,25 @@ class MemberFacade(
 ) {
     fun registerAccount(request: PaymentCommand.RegisterAccount): Account {
         val registerAccount = paymentService.registerAccount(request)
-        memberService.updateDefaultPayment(memberId = registerAccount.memberId, type = PaymentType.ACCOUNT, paymentId = registerAccount.id!!)
+        if (registerAccount.isDefault) {
+            memberService.updateDefaultPayment(
+                memberId = registerAccount.memberId,
+                type = PaymentType.ACCOUNT,
+                paymentId = registerAccount.id!!
+            )
+        }
         return registerAccount
     }
 
     fun registerCard(request: PaymentCommand.RegisterCard): Card {
         val registerCard = paymentService.registerCard(request)
-        memberService.updateDefaultPayment(memberId = registerCard.memberId, type = PaymentType.CARD, paymentId = registerCard.id!!)
+        if (registerCard.isDefault) {
+            memberService.updateDefaultPayment(
+                memberId = registerCard.memberId,
+                type = PaymentType.CARD,
+                paymentId = registerCard.id!!
+            )
+        }
         return registerCard
     }
 }

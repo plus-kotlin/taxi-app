@@ -8,6 +8,6 @@ data class Account(
     val accountHolder: String,
     val accountHolderInfo: String,
     val bankName: String,
-    val isDefault: Boolean,
+    var isDefault: Boolean,
     val isVerified: Boolean,
 )

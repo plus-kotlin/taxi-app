@@ -1,0 +1,149 @@
+package com.plus.taxiapp.api.member
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.plus.taxiapp.api.member.request.RegisterAccountRequest
+import com.plus.taxiapp.api.member.request.RegisterCardRequest
+import com.plus.taxiapp.api.member.response.RegisterAccountResponse
+import com.plus.taxiapp.api.member.response.RegisterCardResponse
+import com.plus.taxiapp.domain.Account
+import com.plus.taxiapp.domain.Card
+import com.plus.taxiapp.domain.command.PaymentCommand
+import com.plus.taxiapp.facade.MemberFacade
+import org.junit.jupiter.api.Test
+import org.mockito.BDDMockito.given
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+
+@WebMvcTest(MemberApi::class)
+@AutoConfigureMockMvc
+class MemberApiTest @Autowired constructor(
+    private val mockMvc: MockMvc,
+    private val objectMapper: ObjectMapper
+) {
+    @MockBean
+    private lateinit var memberFacade: MemberFacade
+
+    private val accountRequest = RegisterAccountRequest(
+        memberId = 4321,
+        accountNum = "1234-5678-9",
+        accountPassword = "1234",
+        accountHolder = "최원빈",
+        accountHolderInfo = "000101-3000000",
+        bankName = "신한은행",
+        isDefault = true,
+    )
+    private val accountResponse = RegisterAccountResponse(
+        accountNum = accountRequest.accountNum,
+        accountHolder = accountRequest.accountHolder,
+        bankName = accountRequest.bankName,
+        isDefault = accountRequest.isDefault,
+        isVerified = true,
+    )
+
+    private val cardRequest = RegisterCardRequest(
+        memberId = 4321,
+        cardNum = "4321-1234-1222",
+        cardPassword = "1234",
+        expirationDate = "2023-01-01",
+        cvc = 777,
+        bankName = "신한은행",
+        isDefault = true,
+    )
+    private val cardResponse = RegisterCardResponse(
+        cardNum = cardRequest.cardNum,
+        expirationDate = cardRequest.expirationDate,
+        bankName = cardRequest.bankName,
+        isDefault = cardRequest.isDefault,
+        isVerified = true,
+    )
+
+    @Test
+    fun `registerAccount(), 사용자는 택시 이용을 위해 계좌 정보를 저장한다`() {
+        val uri = "/api/member/register/account"
+        given(
+            memberFacade.registerAccount(
+                PaymentCommand.RegisterAccount(
+                    memberId = accountRequest.memberId,
+                    accountNum = accountRequest.accountNum,
+                    accountPassword = accountRequest.accountPassword,
+                    accountHolder = accountRequest.accountHolder,
+                    accountHolderInfo = accountRequest.accountHolderInfo,
+                    bankName = accountRequest.bankName,
+                    isDefault = accountRequest.isDefault,
+                )
+            )
+        ).willReturn(
+            Account(
+                memberId = accountRequest.memberId,
+                accountNum = accountRequest.accountNum,
+                accountPassword = accountRequest.accountPassword,
+                accountHolder = accountRequest.accountHolder,
+                accountHolderInfo = accountRequest.accountHolderInfo,
+                bankName = accountRequest.bankName,
+                isDefault = accountRequest.isDefault,
+                isVerified = true,
+            )
+        )
+
+        mockMvc.perform(
+            post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(accountRequest))
+        )
+            .andExpectAll(
+                status().isOk,
+                content()
+                    .json(objectMapper.writeValueAsString(accountResponse)),
+            )
+            .andDo(print())
+    }
+
+    @Test
+    fun `registerCard(), 사용자는 택시 이용을 위해 카드 정보를 저장한다`() {
+        val uri = "/api/member/register/card"
+        given(
+            memberFacade.registerCard(
+                PaymentCommand.RegisterCard(
+                    memberId = cardRequest.memberId,
+                    cardNum = cardRequest.cardNum,
+                    cardPassword = cardRequest.cardPassword,
+                    expirationDate = cardRequest.expirationDate,
+                    cvc = cardRequest.cvc,
+                    bankName = cardRequest.bankName,
+                    isDefault = cardRequest.isDefault,
+                )
+            )
+        ).willReturn(
+            Card(
+                memberId = cardRequest.memberId,
+                cardNum = cardRequest.cardNum,
+                cardPassword = cardRequest.cardPassword,
+                expirationDate = cardRequest.expirationDate,
+                cvc = cardRequest.cvc,
+                bankName = cardRequest.bankName,
+                isDefault = cardRequest.isDefault,
+                isVerified = true,
+            )
+        )
+
+        mockMvc.perform(
+            post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cardRequest))
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpectAll(
+                status().isOk,
+                content()
+                    .json(objectMapper.writeValueAsString(cardResponse)),
+            )
+            .andDo(print())
+    }
+}

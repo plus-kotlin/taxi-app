@@ -59,6 +59,9 @@ dependencies {
 
     implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
 
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

@@ -34,6 +34,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.aws_region }}
+          role-session-name: GitHubActions
           role-to-assume: ${{ env.role_arn }}
 
       - name: Set up JDK 17

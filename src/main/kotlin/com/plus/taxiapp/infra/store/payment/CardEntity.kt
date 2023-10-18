@@ -1,5 +1,6 @@
 package com.plus.taxiapp.infra.store.payment
 
+import com.plus.taxiapp.infra.store.base.TimeEntity
 import com.plus.taxiapp.infra.store.member.MemberEntity
 import jakarta.persistence.*
 
@@ -18,4 +19,4 @@ class CardEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     val memberEntity: MemberEntity,
-)
+): TimeEntity()

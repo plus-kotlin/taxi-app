@@ -1,6 +1,7 @@
 package com.plus.taxiapp.infra.store.member
 
 import com.plus.taxiapp.domain.member.PaymentType
+import com.plus.taxiapp.infra.store.base.TimeEntity
 import com.plus.taxiapp.infra.store.payment.AccountEntity
 import jakarta.persistence.*
 
@@ -10,7 +11,7 @@ class MemberEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     var name: String,
-) {
+): TimeEntity() {
     @Enumerated(EnumType.STRING)
     var defaultPaymentType: PaymentType? = null
     var defaultPaymentId: Long? = null

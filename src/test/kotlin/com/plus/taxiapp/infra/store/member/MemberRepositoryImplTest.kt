@@ -1,7 +1,7 @@
 package com.plus.taxiapp.infra.store.member
 
-import com.plus.taxiapp.domain.Member
-import com.plus.taxiapp.domain.PaymentType
+import com.plus.taxiapp.domain.member.Member
+import com.plus.taxiapp.domain.member.PaymentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -1,7 +1,7 @@
 package com.plus.taxiapp.infra.store.payment
 
-import com.plus.taxiapp.domain.Account
-import com.plus.taxiapp.domain.Card
+import com.plus.taxiapp.domain.member.Account
+import com.plus.taxiapp.domain.member.Card
 import com.plus.taxiapp.infra.store.member.MemberEntity
 import com.plus.taxiapp.infra.store.member.MemberJpaRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -59,6 +59,20 @@ class PaymentRepositoryImplTest @Autowired constructor(
     @Test
     fun `saveCard(), 카드 등록`() {
         val returnCard = paymentRepositoryImpl.saveCard(card)
+        assertThat(returnCard).isEqualTo(card)
+    }
+
+    @Test
+    fun `findAccount(), 계좌 조회`() {
+        paymentRepositoryImpl.saveAccount(account)
+        val returnAccount = paymentRepositoryImpl.findAccount(1)
+        assertThat(returnAccount).isEqualTo(account)
+    }
+
+    @Test
+    fun `findCard(), 카드 조회`() {
+        paymentRepositoryImpl.saveCard(card)
+        val returnCard = paymentRepositoryImpl.findCard(1)
         assertThat(returnCard).isEqualTo(card)
     }
 }

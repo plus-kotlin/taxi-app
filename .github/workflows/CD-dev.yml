@@ -14,7 +14,7 @@ env:
   container_name: taxi-container
   ecs_cluster: taxi-cluster
   ecs_service: taxi-service-dev
-  task_definition: taxi-app-task
+  task_definition: taxi-app-task-dev
 
 permissions:
   id-token: write

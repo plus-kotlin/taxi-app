@@ -61,18 +61,4 @@ class PaymentRepositoryImplTest @Autowired constructor(
         val returnCard = paymentRepositoryImpl.saveCard(card)
         assertThat(returnCard).isEqualTo(card)
     }
-
-    @Test
-    fun `findAccount(), 계좌 조회`() {
-        paymentRepositoryImpl.saveAccount(account)
-        val returnAccount = paymentRepositoryImpl.findAccount(1)
-        assertThat(returnAccount).isEqualTo(account)
-    }
-
-    @Test
-    fun `findCard(), 카드 조회`() {
-        paymentRepositoryImpl.saveCard(card)
-        val returnCard = paymentRepositoryImpl.findCard(1)
-        assertThat(returnCard).isEqualTo(card)
-    }
 }

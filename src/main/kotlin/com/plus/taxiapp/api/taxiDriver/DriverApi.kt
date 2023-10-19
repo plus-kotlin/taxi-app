@@ -20,7 +20,7 @@ class DriverApi(
         driverTaxiRegistrationRequest.hasNoProblem()
 
         val registeredTaxiInfo = driverService.taxiInfoRegister(
-            DriverCommand.Register.of(
+            DriverCommand.Register(
                 driverId = driverId,
                 taxiNumber = driverTaxiRegistrationRequest.taxiNumber,
                 taxiType = driverTaxiRegistrationRequest.taxiType,

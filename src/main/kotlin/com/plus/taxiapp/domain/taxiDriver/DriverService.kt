@@ -4,10 +4,12 @@ import com.plus.taxiapp.domain.taxiDriver.command.DriverCommand
 import org.springframework.stereotype.Service
 
 @Service
-class DriverService{
+class DriverService(
+    private val driverRepository: DriverRepository,
+) {
     fun taxiInfoRegister(command: DriverCommand.Register): Driver {
 
-        return Driver.create(command)
+        return driverRepository.saveTaxiInfo(Driver.create(command))
     }
 
 }

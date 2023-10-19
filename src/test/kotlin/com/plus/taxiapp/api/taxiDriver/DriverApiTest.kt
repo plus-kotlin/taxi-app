@@ -6,6 +6,8 @@ import com.plus.taxiapp.domain.taxiDriver.Driver
 import com.plus.taxiapp.domain.taxiDriver.DriverService
 import com.plus.taxiapp.domain.taxiDriver.DriverType
 import com.plus.taxiapp.domain.taxiDriver.command.DriverCommand
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,23 +32,40 @@ class DriverApiTest() {
     @MockBean
     private lateinit var driverService: DriverService
 
-    @Test
-    fun `RegisterTaxi(), 택시기사님은 영업 참여를 위해 택시 정보를 등록한다`() {
-        val taxiInfoRegistRequest = DriverTaxiRegistrationRequest(taxiNumber = "서울 28바 2311", taxiType = DriverType.COMPACT, taxiModel =  "에쿠스")
-        val registedTaxiInfo = Driver("testDriverHyeok", "서울 28바 2311", DriverType.COMPACT, "에쿠스")
+    @Nested
+    @DisplayName("택시정보 등록 성공 테스트")
+    inner class TaxiInfoRegistHttpRequestSuccessTest {
+        @Test
+        fun `RegisterTaxi(), 택시기사님은 영업 참여를 위해 택시 정보를 등록한다`() {
+            val taxiInfoRegistRequest = DriverTaxiRegistrationRequest(
+                taxiNumber = "서울 28바 2311",
+                taxiType = DriverType.COMPACT,
+                taxiModel = "에쿠스"
+            )
+            val registedTaxiInfo = Driver("testDriverHyeok", "서울 28바 2311", DriverType.COMPACT, "에쿠스")
 
-        given(driverService.taxiInfoRegister(DriverCommand.Register("testDriverHyeok", "서울 28바 2311", DriverType.COMPACT, "에쿠스"))).willReturn(registedTaxiInfo)
+            given(
+                driverService.taxiInfoRegister(
+                    DriverCommand.Register(
+                        "testDriverHyeok",
+                        "서울 28바 2311",
+                        DriverType.COMPACT,
+                        "에쿠스"
+                    )
+                )
+            ).willReturn(registedTaxiInfo)
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/drivers/testDriverHyeok/taxis")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taxiInfoRegistRequest))
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.driverId").value("testDriverHyeok"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.taxiNumber").value("서울 28바 2311"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.taxiType").value("COMPACT"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.taxiModel").value("에쿠스"))
-            .andDo(MockMvcResultHandlers.print())
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/drivers/testDriverHyeok/taxis")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(taxiInfoRegistRequest))
+            )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.driverId").value("testDriverHyeok"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.taxiNumber").value("서울 28바 2311"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.taxiType").value("COMPACT"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.taxiModel").value("에쿠스"))
+                .andDo(MockMvcResultHandlers.print())
+        }
     }
 }

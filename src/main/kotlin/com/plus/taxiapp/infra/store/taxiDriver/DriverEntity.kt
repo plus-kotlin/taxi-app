@@ -1,6 +1,7 @@
 package com.plus.taxiapp.infra.store.taxiDriver
 
 import com.plus.taxiapp.domain.taxiDriver.DriverType
+import com.plus.taxiapp.infra.store.base.TimeEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -14,4 +15,4 @@ class DriverEntity (
     val taxiNumber: String,
     val taxiType: DriverType,
     val taxiModel: String,
-)
+): TimeEntity()

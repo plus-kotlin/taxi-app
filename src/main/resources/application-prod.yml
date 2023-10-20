@@ -14,3 +14,7 @@ spring:
     username: ENC(RsAB6fWoyYA8PwZf2aWlow==)
     password: ENC(MTYv5eF1SC4O9n7IqPTUxJwG77Va2sp/)
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+kakao:
+  rest:
+    key: ${KAKAO_REST_KEY}

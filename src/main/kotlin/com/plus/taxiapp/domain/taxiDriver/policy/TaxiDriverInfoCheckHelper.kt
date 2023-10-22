@@ -1,7 +1,7 @@
-package com.plus.taxiapp.domain.taxiDriver.command.policy
+package com.plus.taxiapp.domain.taxiDriver.policy
 
 
-class DriverInfoCheckHelper {
+class TaxiDriverInfoCheckHelper {
     companion object {
         fun checkTaxiDetailsAreFilled(taxiNumber: String, taxiModel: String) {
             when {

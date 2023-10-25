@@ -18,3 +18,6 @@ spring:
 kakao:
   rest:
     key: ${KAKAO_REST_KEY}
+  sql:
+    init:
+      mode: always

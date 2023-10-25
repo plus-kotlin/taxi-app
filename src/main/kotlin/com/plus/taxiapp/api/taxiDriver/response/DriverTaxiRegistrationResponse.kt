@@ -1,7 +1,7 @@
 package com.plus.taxiapp.api.taxiDriver.response
 
-import com.plus.taxiapp.domain.taxiDriver.Driver
-import com.plus.taxiapp.domain.taxiDriver.DriverType
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriver
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriverType
 
 /**
  * 기사의 택시 정보 등록 API Response
@@ -15,11 +15,11 @@ import com.plus.taxiapp.domain.taxiDriver.DriverType
 data class DriverTaxiRegistrationResponse (
     val driverId: String,
     val taxiNumber: String,
-    val taxiType: DriverType,
+    val taxiType: TaxiDriverType,
     val taxiModel: String,
 ){
     companion object {
-        fun create(driverInfo: Driver): DriverTaxiRegistrationResponse {
+        fun create(driverInfo: TaxiDriver): DriverTaxiRegistrationResponse {
             return DriverTaxiRegistrationResponse(
                 driverInfo.driverId,
                 driverInfo.taxiNumber,

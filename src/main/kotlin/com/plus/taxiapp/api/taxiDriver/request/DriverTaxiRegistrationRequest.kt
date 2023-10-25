@@ -1,7 +1,7 @@
 package com.plus.taxiapp.api.taxiDriver.request
 
 import com.plus.taxiapp.api.taxiDriver.request.policy.RequestCheckHelper
-import com.plus.taxiapp.domain.taxiDriver.DriverType
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriverType
 
 /**
  * 기사의 택시 정보 등록 API Request
@@ -13,7 +13,7 @@ import com.plus.taxiapp.domain.taxiDriver.DriverType
  */
 data class DriverTaxiRegistrationRequest (
     val taxiNumber: String,
-    val taxiType: DriverType,
+    val taxiType: TaxiDriverType,
     val taxiModel: String,
 ){
     fun hasNoProblem(){

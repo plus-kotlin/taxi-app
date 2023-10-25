@@ -1,23 +1,23 @@
 package com.plus.taxiapp.infra.store.taxiDriver
 
-import com.plus.taxiapp.domain.taxiDriver.Driver
-import com.plus.taxiapp.domain.taxiDriver.DriverRepository
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriver
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriverRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-class DriverRepositoryImpl(
-    private val taxiJpaRepository: DriverJpaRepository,
-) : DriverRepository {
-    override fun saveTaxiInfo(taxi: Driver): Driver {
+class TaxiDriverRepositoryImpl(
+    private val taxiJpaRepository: TaxiDriverJpaRepository,
+) : TaxiDriverRepository {
+    override fun saveTaxiInfo(taxi: TaxiDriver): TaxiDriver {
         val savedTaxi = taxiJpaRepository.save(
-            DriverEntity(
+            TaxiDriverEntity(
                 taxiNumber = taxi.taxiNumber,
                 driverId = taxi.driverId,
                 taxiType = taxi.taxiType,
                 taxiModel = taxi.taxiModel,
             )
         )
-        return Driver(
+        return TaxiDriver(
             taxi.driverId,
             taxi.taxiNumber,
             taxi.taxiType,

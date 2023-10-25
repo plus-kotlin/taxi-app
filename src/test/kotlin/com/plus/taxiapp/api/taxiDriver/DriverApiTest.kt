@@ -2,10 +2,10 @@ package com.plus.taxiapp.api.taxiDriver
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.plus.taxiapp.api.taxiDriver.request.DriverTaxiRegistrationRequest
-import com.plus.taxiapp.domain.taxiDriver.Driver
-import com.plus.taxiapp.domain.taxiDriver.DriverService
-import com.plus.taxiapp.domain.taxiDriver.DriverType
-import com.plus.taxiapp.domain.taxiDriver.command.DriverCommand
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriver
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriverService
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriverType
+import com.plus.taxiapp.domain.taxiDriver.command.TaxiDriverCommand
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -30,7 +30,7 @@ class DriverApiTest() {
     private lateinit var objectMapper: ObjectMapper
 
     @MockBean
-    private lateinit var driverService: DriverService
+    private lateinit var driverService: TaxiDriverService
 
     @Nested
     @DisplayName("택시정보 등록 성공 테스트")
@@ -39,17 +39,17 @@ class DriverApiTest() {
         fun `RegisterTaxi(), 택시기사님은 영업 참여를 위해 택시 정보를 등록한다`() {
             val taxiInfoRegistRequest = DriverTaxiRegistrationRequest(
                 taxiNumber = "서울 28바 2311",
-                taxiType = DriverType.COMPACT,
+                taxiType = TaxiDriverType.COMPACT,
                 taxiModel = "에쿠스"
             )
-            val registedTaxiInfo = Driver("testDriverHyeok", "서울 28바 2311", DriverType.COMPACT, "에쿠스")
+            val registedTaxiInfo = TaxiDriver("testDriverHyeok", "서울 28바 2311", TaxiDriverType.COMPACT, "에쿠스")
 
             given(
                 driverService.taxiInfoRegister(
-                    DriverCommand.Register(
+                    TaxiDriverCommand.Register(
                         "testDriverHyeok",
                         "서울 28바 2311",
-                        DriverType.COMPACT,
+                        TaxiDriverType.COMPACT,
                         "에쿠스"
                     )
                 )

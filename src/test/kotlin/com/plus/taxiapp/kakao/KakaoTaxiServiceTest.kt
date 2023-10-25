@@ -124,5 +124,8 @@ class KakaoTaxiServiceTest(@Value("\${kakao.rest.key}") private val kakaoApiKey:
         println("ttt" + routeInfo.toString())
         // 요금선택
 
+        // 금액 정보를 바탕으로 택시 찾기 시작
+
+        //
     }
 }

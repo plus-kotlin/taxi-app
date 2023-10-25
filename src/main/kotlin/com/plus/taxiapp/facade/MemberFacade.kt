@@ -3,9 +3,7 @@ package com.plus.taxiapp.facade
 import com.plus.taxiapp.domain.member.*
 import com.plus.taxiapp.domain.member.command.PaymentCommand
 import org.springframework.stereotype.Component
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.util.*
 
 @Component
 class MemberFacade(

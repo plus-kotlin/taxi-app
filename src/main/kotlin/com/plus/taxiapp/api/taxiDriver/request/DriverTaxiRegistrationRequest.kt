@@ -11,12 +11,13 @@ import com.plus.taxiapp.domain.taxiDriver.TaxiDriverType
  *
  * @author Choichanhyeok
  */
-data class DriverTaxiRegistrationRequest (
+data class DriverTaxiRegistrationRequest(
+    val memberId: Long,
     val taxiNumber: String,
     val taxiType: TaxiDriverType,
     val taxiModel: String,
-){
-    fun hasNoProblem(){
+) {
+    fun hasNoProblem() {
         RequestCheckHelper.sayTaxiNumberIsPerfect(this.taxiNumber)
     }
 }

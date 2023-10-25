@@ -17,6 +17,7 @@ data class DriverTaxiRegistrationResponse (
     val taxiNumber: String,
     val taxiType: TaxiDriverType,
     val taxiModel: String,
+
 ){
     companion object {
         fun create(driverInfo: TaxiDriver): DriverTaxiRegistrationResponse {

@@ -21,6 +21,7 @@ class DriverApi(
 
         val registeredTaxiInfo = driverService.taxiInfoRegister(
             TaxiDriverCommand.Register(
+                memberId = driverTaxiRegistrationRequest.memberId,
                 driverId = driverId,
                 taxiNumber = driverTaxiRegistrationRequest.taxiNumber,
                 taxiType = driverTaxiRegistrationRequest.taxiType,

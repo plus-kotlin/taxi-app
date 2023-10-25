@@ -50,7 +50,7 @@ class MemberRepositoryImpl(
         )
     }
 
-    private fun findMemberEntity(memberId: Long): MemberEntity {
+    fun findMemberEntity(memberId: Long): MemberEntity {
         return memberJpaRepository.findByIdOrNull(memberId) ?: throw NullPointerException("Not Found Member")
     }
 }

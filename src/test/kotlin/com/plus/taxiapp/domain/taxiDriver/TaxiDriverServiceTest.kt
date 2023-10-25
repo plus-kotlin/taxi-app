@@ -25,6 +25,7 @@ internal class TaxiDriverServiceTest {
 
             // given
             val command = TaxiDriverCommand.Register(
+                memberId = 1L,
                 driverId = "testDriverHyeok",
                 taxiNumber = "서울 28바 2311",
                 taxiType = TaxiDriverType.COMPACT,
@@ -50,6 +51,7 @@ internal class TaxiDriverServiceTest {
         fun `택시 번호가 비어있는 채로 TaxiDriver객체가 생성될 때 Taxi Number is Required라는 예외가 발생한다`() {
             // given
             val command = TaxiDriverCommand.Register(
+                memberId = 1L,
                 driverId = "testDriverHyeok",
                 taxiNumber = "",  // 비어있는 택시 번호
                 taxiType = TaxiDriverType.COMPACT,
@@ -69,6 +71,7 @@ internal class TaxiDriverServiceTest {
         fun `택시 번호 형식이 올바르지 않으면 Taxi Number is not in the right format 예외가 발생한다`() {
             // given
             val command = TaxiDriverCommand.Register(
+                memberId = 1L,
                 driverId = "testDriverHyeok",
                 taxiNumber = "잘못된 형식의 번호",  // 잘못된 형식의 택시 번호
                 taxiType = TaxiDriverType.COMPACT,

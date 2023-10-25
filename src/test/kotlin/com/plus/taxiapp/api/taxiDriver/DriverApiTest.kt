@@ -38,6 +38,7 @@ class DriverApiTest() {
         @Test
         fun `RegisterTaxi(), 택시기사님은 영업 참여를 위해 택시 정보를 등록한다`() {
             val taxiInfoRegistRequest = DriverTaxiRegistrationRequest(
+                memberId = 1L,
                 taxiNumber = "서울 28바 2311",
                 taxiType = TaxiDriverType.COMPACT,
                 taxiModel = "에쿠스"
@@ -47,6 +48,7 @@ class DriverApiTest() {
             given(
                 driverService.taxiInfoRegister(
                     TaxiDriverCommand.Register(
+                        1L,
                         "testDriverHyeok",
                         "서울 28바 2311",
                         TaxiDriverType.COMPACT,

@@ -1,5 +1,6 @@
 package com.plus.taxiapp.infra.store.taxiDriver
 
+import com.plus.taxiapp.domain.member.Member
 import com.plus.taxiapp.domain.taxiDriver.TaxiDriver
 import com.plus.taxiapp.domain.taxiDriver.TaxiDriverRepository
 import com.plus.taxiapp.domain.taxiDriver.TaxiStatus
@@ -9,7 +10,8 @@ import org.springframework.stereotype.Repository
 @Repository
 class TaxiDriverRepositoryImpl(
     private val taxiJpaRepository: TaxiDriverJpaRepository,
-) : TaxiDriverRepository {
+
+    ) : TaxiDriverRepository {
     override fun saveTaxiInfo(taxi: TaxiDriver, member: MemberEntity): TaxiDriver {
         val savedTaxi = taxiJpaRepository.save(
             TaxiDriverEntity(
@@ -26,6 +28,27 @@ class TaxiDriverRepositoryImpl(
             taxi.taxiNumber,
             taxi.taxiType,
             taxi.taxiModel,
+            taxiStatus = TaxiStatus.NOTDRIVING
         )
+    }
+
+    override fun findTaxiDriver(member: Member): TaxiDriver {
+        val taxiDriver = taxiJpaRepository.findByMember(member)
+        return TaxiDriver(
+            taxiDriver.driverId,
+            taxiDriver.taxiNumber,
+            taxiDriver.taxiType,
+            taxiDriver.taxiModel,
+            taxiDriver.taxiStatus ?: TaxiStatus.NOTDRIVING,
+        )
+    }
+
+
+    override fun findTaxiDriverEntity(driverId: String): TaxiDriverEntity {
+        return taxiJpaRepository.findByDriverId(driverId)
+    }
+
+    override fun saveTaxiDriverEntity(driverEntity: TaxiDriverEntity) {
+        taxiJpaRepository.save(driverEntity)
     }
 }

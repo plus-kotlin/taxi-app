@@ -43,7 +43,8 @@ class DriverApiTest() {
                 taxiType = TaxiDriverType.COMPACT,
                 taxiModel = "에쿠스"
             )
-            val registedTaxiInfo = TaxiDriver("testDriverHyeok", "서울 28바 2311", TaxiDriverType.COMPACT, "에쿠스")
+            val registedTaxiInfo = TaxiDriver(
+                "testDriverHyeok", "서울 28바 2311", TaxiDriverType.COMPACT, "에쿠스")
 
             given(
                 driverService.taxiInfoRegister(

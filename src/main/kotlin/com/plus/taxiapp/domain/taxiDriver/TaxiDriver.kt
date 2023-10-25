@@ -1,12 +1,15 @@
 package com.plus.taxiapp.domain.taxiDriver
 
 import com.plus.taxiapp.domain.taxiDriver.policy.TaxiDriverInfoCheckHelper
+import lombok.Getter
 
+@Getter
 data class TaxiDriver(
     val driverId: String,
     val taxiNumber: String,
     val taxiType: TaxiDriverType,
     val taxiModel: String,
+    var taxiStatus: TaxiStatus? = TaxiStatus.NOTDRIVING,
 ) {
     init {
         TaxiDriverInfoCheckHelper.checkTaxiDetailsAreFilled(taxiNumber, taxiModel)

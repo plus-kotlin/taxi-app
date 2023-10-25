@@ -1,5 +1,6 @@
 package com.plus.taxiapp.api.taxiDriver
 
+import com.plus.taxiapp.api.taxiDriver.request.DriverGpsInfoRequest
 import com.plus.taxiapp.api.taxiDriver.request.DriverTaxiRegistrationRequest
 import com.plus.taxiapp.api.taxiDriver.response.DriverTaxiRegistrationResponse
 import com.plus.taxiapp.domain.taxiDriver.command.TaxiDriverCommand
@@ -30,5 +31,12 @@ class DriverApi(
         )
 
         return ResponseEntity.ok().body(DriverTaxiRegistrationResponse.create(registeredTaxiInfo))
+    }
+
+    @PostMapping("/waiting/{memberId}")
+    fun waitingCallDriver(
+        @RequestBody driverGpsInfoRequest: DriverGpsInfoRequest
+    ) {
+        driverService.waitingCallDriver(driverGpsInfoRequest)
     }
 }

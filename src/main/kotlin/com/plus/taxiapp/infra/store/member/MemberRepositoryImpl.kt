@@ -50,7 +50,7 @@ class MemberRepositoryImpl(
         )
     }
 
-    fun findMemberEntity(memberId: Long): MemberEntity {
+    override fun findMemberEntity(memberId: Long): MemberEntity {
         return memberJpaRepository.findByIdOrNull(memberId) ?: throw NullPointerException("Not Found Member")
     }
 }

@@ -19,7 +19,9 @@ import org.springframework.web.client.RestTemplate
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("길찾기 서비스 테스트")
-class KakaoTaxiServiceTest(@Value("\${kakao.rest.key}") private val kakaoApiKey: String) {
+class KakaoTaxiServiceTest(
+    @Value("\${kakao.rest.key}") private val kakaoApiKey: String
+) {
     @DisplayName("Kakao rest api 주소 검색하기")
     @Test
     fun `API 주소 검색하기 출력 `() {
@@ -80,7 +82,6 @@ class KakaoTaxiServiceTest(@Value("\${kakao.rest.key}") private val kakaoApiKey:
             this.set("Authorization", kakaoApiKey)
 
             HttpEntity<String>(this).let { entity ->
-
                 RestTemplate().exchange(url, HttpMethod.GET, entity, Response::class.java).also { response ->
                     println(response.body.toString())
                     return response.body!!
@@ -121,8 +122,8 @@ class KakaoTaxiServiceTest(@Value("\${kakao.rest.key}") private val kakaoApiKey:
                 )
             }
         }
-        println("ttt" + routeInfo.toString())
         // 요금선택
+
 
         // 금액 정보를 바탕으로 택시 찾기 시작
 

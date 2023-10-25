@@ -5,7 +5,10 @@ import com.plus.taxiapp.api.member.request.RegisterCardRequest
 import com.plus.taxiapp.api.member.response.PaymentResponse
 import com.plus.taxiapp.api.member.response.RegisterAccountResponse
 import com.plus.taxiapp.api.member.response.RegisterCardResponse
+import com.plus.taxiapp.api.member.request.GpsInfo
+import com.plus.taxiapp.api.taxiDriver.response.KakaoLocationInfo
 import com.plus.taxiapp.domain.member.command.PaymentCommand
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriverService
 import com.plus.taxiapp.facade.MemberFacade
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,6 +24,7 @@ class MemberApi {
     @RequestMapping("/api/member/")
     class MemberApi(
         private val memberFacade: MemberFacade,
+        private val taxiDriverService: TaxiDriverService,
     ) {
         @PostMapping("/register/account")
         fun registerAccount(
@@ -84,6 +88,27 @@ class MemberApi {
                 paymentResult = "Success",
                 paymentTime = response,
             )
+        }
+
+        @GetMapping("/call")
+        fun getLocationInfo(
+            @PathVariable placeName: String,
+        ): KakaoLocationInfo {
+            return taxiDriverService.getLocationInfo(placeName)
+        }
+
+        @GetMapping("/call/place")
+        fun getFareAndDistanceInfo(callData: GpsInfo) {
+            taxiDriverService.getFareAndDistanceInfo(callData)
+        }
+
+        @GetMapping("/call/start/{memberId}/{x}/{y}/{range}")
+        fun startCallMember(
+            @PathVariable memberId: Long,
+            @PathVariable x: Double,
+            @PathVariable y: Double,
+        ) {
+            taxiDriverService.startCallMember(memberId, x, y)
         }
     }
 }

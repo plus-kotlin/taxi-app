@@ -1,6 +1,5 @@
 package com.plus.taxiapp.infra.store.taxiDriver
 
-import com.plus.taxiapp.domain.member.PaymentType
 import com.plus.taxiapp.domain.taxiDriver.TaxiDriverType
 import com.plus.taxiapp.domain.taxiDriver.TaxiStatus
 import com.plus.taxiapp.infra.store.base.TimeEntity
@@ -13,7 +12,7 @@ class TaxiDriverEntity(
     @Column(name = "taxidriver_id")
     val id: Long? = null,
     @OneToOne(mappedBy = "taxiDriverEntity", fetch = FetchType.LAZY)
-    val member: MemberEntity,
+    val member: MemberEntity? = null,
     val driverId: String,
     val taxiNumber: String,
     val taxiType: TaxiDriverType,

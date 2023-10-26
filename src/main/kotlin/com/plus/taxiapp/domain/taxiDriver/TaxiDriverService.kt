@@ -51,9 +51,7 @@ class TaxiDriverService(
     )
 
     // 주변 택시 없을 경우 50씩 증가하며 재탐색
-    fun startCallMember(memberId: Long, x: Double, y: Double): TaxiDriverEntity {
-        val member = memberRepository.findMember(memberId)
-
+    fun startCallMember(memberId: Long, x: Double, y: Double): TaxiDriver {
         var range = 50.0
         var findNearbyTaxis = findNearbyTaxis(x, y, range)
 
@@ -68,9 +66,14 @@ class TaxiDriverService(
         val nearbyTaxi = findNearbyTaxis[0]
         val driver = driverRepository.findTaxiDriverEntity(nearbyTaxi.id)
         this.changeDriverStatus(driver, TaxiStatus.DRIVING)
-        // 이미 운행 중일 경우 조회하지 않도록 설정 추가
+        removeDrivingThread(driver.driverId)
 
-        return driverRepository.findTaxiDriverEntity(nearbyTaxi.id)
+        return TaxiDriver(driver.driverId, driver.taxiNumber, driver.taxiType, driver.taxiModel, driver.taxiStatus)
+    }
+
+    fun callDrivingComplete(driverId: String) {
+        val driverEntity = driverRepository.findTaxiDriverEntity(driverId)
+        changeDriverStatus(driverEntity, TaxiStatus.COMPLETED)
     }
 
     fun changeDriverStatus(taxiDriver: TaxiDriverEntity, status: TaxiStatus) {
@@ -86,7 +89,6 @@ class TaxiDriverService(
         driverRepository.saveTaxiDriverEntity(driverEntity)
     }
 
-
     fun waitingCallDriver(driverGpsInfoRequest: DriverGpsInfoRequest) {
         val member = memberRepository.findMember(driverGpsInfoRequest.memberId)
         val taxiDriver = driverRepository.findTaxiDriver(member)
@@ -97,7 +99,6 @@ class TaxiDriverService(
                 driverGpsInfoRequest.originX, driverGpsInfoRequest.originY
             )
         )
-
         this.waitingDriver(taxiDriver.driverId)
     }
 
@@ -140,7 +141,8 @@ class TaxiDriverService(
 
     fun getFareAndDistanceInfo(gpsInfo: GpsInfo): TaxiFareAndDistanceInfo? {
         var url =
-            "https://apis-navi.kakaomobility.com/v1/directions?origin=${gpsInfo.originX},${gpsInfo.originY}" + "&destination=${gpsInfo.destinationX},${gpsInfo.destinationY}"
+            "https://apis-navi.kakaomobility.com/v1/directions?origin=${gpsInfo.originX},${gpsInfo.originY}" +
+                    "&destination=${gpsInfo.destinationX},${gpsInfo.destinationY}"
 
         var headers = HttpHeaders()
         headers.set("Authorization", kakaoApiKey)
@@ -164,7 +166,6 @@ class TaxiDriverService(
                 }
             }
         }
-
         return routeInfo
     }
 

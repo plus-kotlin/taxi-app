@@ -43,7 +43,6 @@ class TaxiDriverRepositoryImpl(
         )
     }
 
-
     override fun findTaxiDriverEntity(driverId: String): TaxiDriverEntity {
         return taxiJpaRepository.findByDriverId(driverId)
     }

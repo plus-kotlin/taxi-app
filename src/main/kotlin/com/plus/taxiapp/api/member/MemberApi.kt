@@ -7,7 +7,9 @@ import com.plus.taxiapp.api.member.response.RegisterAccountResponse
 import com.plus.taxiapp.api.member.response.RegisterCardResponse
 import com.plus.taxiapp.api.member.request.GpsInfo
 import com.plus.taxiapp.api.taxiDriver.response.KakaoLocationInfo
+import com.plus.taxiapp.api.taxiDriver.response.TaxiFareAndDistanceInfo
 import com.plus.taxiapp.domain.member.command.PaymentCommand
+import com.plus.taxiapp.domain.taxiDriver.TaxiDriver
 import com.plus.taxiapp.domain.taxiDriver.TaxiDriverService
 import com.plus.taxiapp.facade.MemberFacade
 import org.springframework.web.bind.annotation.GetMapping
@@ -98,8 +100,8 @@ class MemberApi {
         }
 
         @GetMapping("/call/place")
-        fun getFareAndDistanceInfo(callData: GpsInfo) {
-            taxiDriverService.getFareAndDistanceInfo(callData)
+        fun getFareAndDistanceInfo(callData: GpsInfo): TaxiFareAndDistanceInfo? {
+            return taxiDriverService.getFareAndDistanceInfo(callData)
         }
 
         @GetMapping("/call/start/{memberId}/{x}/{y}/{range}")
@@ -107,8 +109,8 @@ class MemberApi {
             @PathVariable memberId: Long,
             @PathVariable x: Double,
             @PathVariable y: Double,
-        ) {
-            taxiDriverService.startCallMember(memberId, x, y)
+        ): TaxiDriver {
+            return taxiDriverService.startCallMember(memberId, x, y)
         }
     }
 }

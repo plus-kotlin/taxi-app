@@ -33,10 +33,15 @@ class DriverApi(
         return ResponseEntity.ok().body(DriverTaxiRegistrationResponse.create(registeredTaxiInfo))
     }
 
-    @PostMapping("/waiting/{memberId}")
+    @PostMapping("/call/waiting")
     fun waitingCallDriver(
         @RequestBody driverGpsInfoRequest: DriverGpsInfoRequest
     ) {
         driverService.waitingCallDriver(driverGpsInfoRequest)
+    }
+
+    @PostMapping("/call/complete/{driverId}")
+    fun callDrivingComplete(@PathVariable driverId: String) {
+        driverService.callDrivingComplete(driverId)
     }
 }

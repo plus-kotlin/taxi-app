@@ -43,7 +43,7 @@ class PlaceServiceTest(
 
         // When & Then
         mockMvc.perform(
-            post("/team7/api/v1/place/register")
+            post("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(place))
         )

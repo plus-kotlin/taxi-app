@@ -122,11 +122,5 @@ class KakaoTaxiServiceTest(
                 )
             }
         }
-        // 요금선택
-
-
-        // 금액 정보를 바탕으로 택시 찾기 시작
-
-        //
     }
 }

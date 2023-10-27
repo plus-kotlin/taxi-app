@@ -1,4 +1,4 @@
-package com.plus.taxiapp.shared.advice.exception
+package com.plus.taxiapp.shared.aop.advice
 
 import com.plus.taxiapp.shared.exception.ErrorResponse
 import lombok.extern.slf4j.Slf4j

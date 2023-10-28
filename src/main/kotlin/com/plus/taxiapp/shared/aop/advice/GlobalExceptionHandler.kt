@@ -12,7 +12,6 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     fun handleAllExceptions(ex: Exception): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse("Exception000", ex.message ?: "An error occurred.")
-        //log.error("Exception: ", ex)
         return ResponseEntity.internalServerError().body(errorResponse)
     }
 }

@@ -12,33 +12,30 @@ import org.springframework.stereotype.Component
 @Component
 @Slf4j
 class LoggingAspect {
-
-    @Before("execution(* com.example..*.*(..))")
+    @Before("execution(* com.plus.taxiapp..*.*(..))")
     fun beforeMethodCall(joinPoint: JoinPoint) {
         val methodName = joinPoint.signature.name
-        val args = joinPoint.args
+        val args = joinPoint.args.joinToString(", ") // 모든 인자를 문자열로 변환
 
         val threadId = Thread.currentThread().id
         val timestamp = System.currentTimeMillis()
-        val instanceId = "[미정]" // TODO 인프라 환경 구축에 따라 인스턴스 정의 방법 재정의하기
+        val instanceId = "[미정]"
 
-        args.firstOrNull()?.let {
-            val traceId = "$instanceId-$timestamp-$threadId"
-            log.info("[$traceId] [${System.currentTimeMillis()}] [$methodName] call $it")
-        }
+        val traceId = "$instanceId-$timestamp-$threadId"
+        log.info("[$traceId] [${System.currentTimeMillis()}] [$methodName] called with args: $args")
     }
 
-    @AfterReturning(pointcut = "execution(* com.example..*.*(..))", returning = "result")
-    fun afterMethodCall(joinPoint: JoinPoint, result: Any) {
-        val args = joinPoint.args
+    @AfterReturning(pointcut = "execution(* com.plus.taxiapp..*.*(..))", returning = "result")
+    fun afterMethodCall(joinPoint: JoinPoint, result: Any?) {
+        val methodName = joinPoint.signature.name
+        val args = joinPoint.args.joinToString(", ")
 
         val threadId = Thread.currentThread().id
         val timestamp = System.currentTimeMillis()
-        val instanceId = "[미정]" // TODO 인프라 환경 구축에 따라 인스턴스 정의 방법 재정의하기
+        val instanceId = "[미정]"
 
-        args.firstOrNull()?.let {
-            val traceId = "$instanceId-$timestamp-$threadId"
-            log.info("[$traceId] [${System.currentTimeMillis()}] [$it] $it")
-        }
+        val traceId = "$instanceId-$timestamp-$threadId"
+        log.info("[$traceId] [${System.currentTimeMillis()}] [$methodName] called with args: $args, returned: $result")
     }
+
 }

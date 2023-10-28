@@ -12,17 +12,13 @@ import org.springframework.stereotype.Component
 @Component
 @Slf4j
 class LoggingAspect {
+
     @Before("execution(* com.plus.taxiapp..*.*(..))")
     fun beforeMethodCall(joinPoint: JoinPoint) {
         val methodName = joinPoint.signature.name
         val args = joinPoint.args.joinToString(", ") // 모든 인자를 문자열로 변환
 
-        val threadId = Thread.currentThread().id
-        val timestamp = System.currentTimeMillis()
-        val instanceId = "[미정]"
-
-        val traceId = "$instanceId-$timestamp-$threadId"
-        log.info("[$traceId] [${System.currentTimeMillis()}] [$methodName] called with args: $args")
+        log.info("[$methodName] called with args: $args")
     }
 
     @AfterReturning(pointcut = "execution(* com.plus.taxiapp..*.*(..))", returning = "result")
@@ -30,12 +26,7 @@ class LoggingAspect {
         val methodName = joinPoint.signature.name
         val args = joinPoint.args.joinToString(", ")
 
-        val threadId = Thread.currentThread().id
-        val timestamp = System.currentTimeMillis()
-        val instanceId = "[미정]"
-
-        val traceId = "$instanceId-$timestamp-$threadId"
-        log.info("[$traceId] [${System.currentTimeMillis()}] [$methodName] called with args: $args, returned: $result")
+        log.info("[$methodName] called with args: $args, returned: $result")
     }
 
 }

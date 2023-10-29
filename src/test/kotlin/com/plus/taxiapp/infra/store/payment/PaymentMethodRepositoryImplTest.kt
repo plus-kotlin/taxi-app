@@ -1,7 +1,7 @@
 package com.plus.taxiapp.infra.store.payment
 
-import com.plus.taxiapp.domain.member.Account
-import com.plus.taxiapp.domain.member.Card
+import com.plus.taxiapp.domain.payment.account.Account
+import com.plus.taxiapp.domain.payment.card.Card
 import com.plus.taxiapp.infra.store.member.MemberEntity
 import com.plus.taxiapp.infra.store.member.MemberJpaRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PaymentRepositoryImplTest @Autowired constructor(
+class PaymentMethodRepositoryImplTest @Autowired constructor(
     private val memberJpaRepository: MemberJpaRepository,
-    private val paymentRepositoryImpl: PaymentRepositoryImpl,
+    private val paymentRepositoryImpl: PaymentMethodRepositoryImpl,
 ) {
 
     private lateinit var account: Account

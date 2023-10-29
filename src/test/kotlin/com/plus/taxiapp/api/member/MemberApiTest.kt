@@ -1,15 +1,14 @@
 package com.plus.taxiapp.api.member
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.plus.taxiapp.api.member.request.RegisterAccountRequest
-import com.plus.taxiapp.api.member.request.RegisterCardRequest
-import com.plus.taxiapp.api.member.response.PaymentResponse
-import com.plus.taxiapp.api.member.response.RegisterAccountResponse
-import com.plus.taxiapp.api.member.response.RegisterCardResponse
-import com.plus.taxiapp.domain.member.Account
-import com.plus.taxiapp.domain.member.Card
-import com.plus.taxiapp.domain.member.command.PaymentCommand
-import com.plus.taxiapp.facade.MemberFacade
+import com.plus.taxiapp.api.payment.request.RegisterAccountRequest
+import com.plus.taxiapp.api.payment.request.RegisterCardRequest
+import com.plus.taxiapp.api.payment.response.PaymentResponse
+import com.plus.taxiapp.api.payment.response.RegisterAccountResponse
+import com.plus.taxiapp.api.payment.response.RegisterCardResponse
+import com.plus.taxiapp.domain.payment.account.Account
+import com.plus.taxiapp.domain.payment.card.Card
+import com.plus.taxiapp.domain.payment.command.PaymentMethodCommand
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,7 +53,7 @@ class MemberApiTest @Autowired constructor(
         val uri = "/api/member/register/account"
         given(
             memberFacade.registerAccount(
-                PaymentCommand.RegisterAccount(
+                PaymentMethodCommand.RegisterAccount(
                     memberId = accountRequest.memberId,
                     accountNum = accountRequest.accountNum,
                     accountPassword = accountRequest.accountPassword,
@@ -111,7 +110,7 @@ class MemberApiTest @Autowired constructor(
         val uri = "/api/member/register/card"
         given(
             memberFacade.registerCard(
-                PaymentCommand.RegisterCard(
+                PaymentMethodCommand.RegisterCard(
                     memberId = cardRequest.memberId,
                     cardNum = cardRequest.cardNum,
                     cardPassword = cardRequest.cardPassword,

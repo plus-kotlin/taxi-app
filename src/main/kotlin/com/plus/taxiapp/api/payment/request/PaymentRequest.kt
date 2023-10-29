@@ -1,4 +1,4 @@
-package com.plus.taxiapp.api.member.request
+package com.plus.taxiapp.api.payment.request
 
 data class PaymentRequest(
     val memberId: Long,

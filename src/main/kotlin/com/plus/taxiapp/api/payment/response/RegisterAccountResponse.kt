@@ -1,4 +1,4 @@
-package com.plus.taxiapp.api.member.response
+package com.plus.taxiapp.api.payment.response
 
 data class RegisterAccountResponse(
     val accountNum: String,

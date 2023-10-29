@@ -1,9 +1,13 @@
 package com.plus.taxiapp.domain
 
 import com.plus.taxiapp.domain.member.*
-import com.plus.taxiapp.domain.member.command.PaymentCommand
-import com.plus.taxiapp.infra.middleware.payment.PaymentMiddleWare
-import com.plus.taxiapp.infra.middleware.validation.ValidationMiddleWare
+import com.plus.taxiapp.domain.payment.PaymentMethodRepository
+import com.plus.taxiapp.domain.payment.command.PaymentMethodCommand
+import com.plus.taxiapp.domain.payment.PaymentMethodService
+import com.plus.taxiapp.domain.payment.account.Account
+import com.plus.taxiapp.domain.payment.card.Card
+import com.plus.taxiapp.infra.client.PaymentClient
+import com.plus.taxiapp.infra.client.ValidationClient
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,21 +22,21 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 
 @ExtendWith(MockitoExtension::class)
-class PaymentServiceTest {
+class PaymentMethodServiceTest {
 
     @Mock
-    private lateinit var paymentRepository: PaymentRepository
+    private lateinit var paymentMethodRepository: PaymentMethodRepository
 
     @Mock
-    private lateinit var validationMiddleWare: ValidationMiddleWare
+    private lateinit var validationClient: ValidationClient
 
     @Mock
-    private lateinit var paymentMiddleWare: PaymentMiddleWare
+    private lateinit var paymentClient: PaymentClient
 
     @InjectMocks
-    private lateinit var paymentService: PaymentService
+    private lateinit var paymentMethodService: PaymentMethodService
 
-    private val registerAccount = PaymentCommand.RegisterAccount(
+    private val registerAccount = PaymentMethodCommand.RegisterAccount(
         memberId = 4321,
         accountNum = "1234-5678-9",
         accountPassword = "1234",
@@ -52,7 +56,7 @@ class PaymentServiceTest {
         isVerified = true,
     )
 
-    private val registerCard = PaymentCommand.RegisterCard(
+    private val registerCard = PaymentMethodCommand.RegisterCard(
         memberId = 4321,
         cardNum = "4321-1234-1222",
         cardPassword = "1234",
@@ -74,21 +78,21 @@ class PaymentServiceTest {
 
     @Test
     fun `registerAccount(), 계좌 등록`() {
-        given(paymentRepository.saveAccount(any())).willReturn(account)
-        assertThat(paymentService.registerAccount(registerAccount)).isEqualTo(account)
+        given(paymentMethodRepository.saveAccount(any())).willReturn(account)
+        assertThat(paymentMethodService.registerAccount(registerAccount)).isEqualTo(account)
     }
 
     @Test
     fun `validationAccount(), 계좌 검증 실패`() {
         given(
-            validationMiddleWare.validationAccount(
+            validationClient.validationAccount(
                 any(),
                 any()
             )
         ).willThrow(IllegalArgumentException("Validation Middle Ware Exception"))
 
         val msg = assertThrows<IllegalArgumentException> {
-            paymentService.registerAccount(registerAccount)
+            paymentMethodService.registerAccount(registerAccount)
         }.message
 
         assertThat(msg).isEqualTo("Validation Middle Ware Exception")
@@ -97,7 +101,7 @@ class PaymentServiceTest {
     @Test
     fun `계좌 등록 요청 데이터 검증`() {
         val msg = assertThrows<IllegalArgumentException> {
-            PaymentCommand.RegisterAccount(
+            PaymentMethodCommand.RegisterAccount(
                 memberId = 4321,
                 accountNum = "",
                 accountPassword = "1234",
@@ -113,14 +117,14 @@ class PaymentServiceTest {
 
     @Test
     fun `registerCard(), 카드 등록`() {
-        given(paymentRepository.saveCard(any())).willReturn(card)
-        assertThat(paymentService.registerCard(registerCard)).isEqualTo(card)
+        given(paymentMethodRepository.saveCard(any())).willReturn(card)
+        assertThat(paymentMethodService.registerCard(registerCard)).isEqualTo(card)
     }
 
     @Test
     fun `validationCard(), 카드 검증 실패`() {
         given(
-            validationMiddleWare.validationCard(
+            validationClient.validationCard(
                 any(),
                 any(),
                 any(),
@@ -129,7 +133,7 @@ class PaymentServiceTest {
         ).willThrow(IllegalArgumentException("Validation Middle Ware Exception"))
 
         val msg = assertThrows<IllegalArgumentException> {
-            paymentService.registerCard(registerCard)
+            paymentMethodService.registerCard(registerCard)
         }.message
 
         assertThat(msg).isEqualTo("Validation Middle Ware Exception")
@@ -138,7 +142,7 @@ class PaymentServiceTest {
     @Test
     fun `카드 등록 요청 데이터 검증`() {
         val msg = assertThrows<IllegalArgumentException> {
-            PaymentCommand.RegisterCard(
+            PaymentMethodCommand.RegisterCard(
                 memberId = 4321,
                 cardNum = "",
                 cardPassword = "1234",
@@ -154,28 +158,28 @@ class PaymentServiceTest {
 
     @Test
     fun `기등록된 결제 방법 중 Default 결제가 계좌인 경우`() {
-        given(paymentRepository.findAccount(any())).willReturn(account)
-        paymentService.paymentFare(PaymentType.ACCOUNT, 1)
-        verify(paymentMiddleWare, times(1)).paymentByAccount(any(), any())
-        verify(paymentMiddleWare, never()).paymentByCard(any(), any(), any(), any())
+        given(paymentMethodRepository.findAccount(any())).willReturn(account)
+        paymentMethodService.paymentFare(PaymentType.ACCOUNT, 1)
+        verify(paymentClient, times(1)).paymentByAccount(any(), any())
+        verify(paymentClient, never()).paymentByCard(any(), any(), any(), any())
     }
 
     @Test
     fun `기등록된 결제 방법 중 Default 결제가 카드인 경우`() {
-        given(paymentRepository.findCard(any())).willReturn(card)
-        paymentService.paymentFare(PaymentType.CARD, 1)
-        verify(paymentMiddleWare, times(1)).paymentByCard(any(), any(), any(), any())
-        verify(paymentMiddleWare, never()).paymentByAccount(any(), any())
+        given(paymentMethodRepository.findCard(any())).willReturn(card)
+        paymentMethodService.paymentFare(PaymentType.CARD, 1)
+        verify(paymentClient, times(1)).paymentByCard(any(), any(), any(), any())
+        verify(paymentClient, never()).paymentByAccount(any(), any())
     }
 
     @Test
     fun `잘못된 Payment Type 을 입력한 경우`() {
         val msg = assertThrows<IllegalArgumentException> {
-            paymentService.paymentFare(null, 1)
+            paymentMethodService.paymentFare(null, 1)
         }.message
 
         assertThat(msg).isEqualTo("Payment Type Info Error")
-        verify(paymentMiddleWare, never()).paymentByCard(any(), any(), any(), any())
-        verify(paymentMiddleWare, never()).paymentByAccount(any(), any())
+        verify(paymentClient, never()).paymentByCard(any(), any(), any(), any())
+        verify(paymentClient, never()).paymentByAccount(any(), any())
     }
 }

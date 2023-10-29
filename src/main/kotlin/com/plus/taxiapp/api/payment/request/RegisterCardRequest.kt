@@ -1,13 +1,11 @@
-package com.plus.taxiapp.domain.member
+package com.plus.taxiapp.api.payment.request
 
-data class Card(
-    val id: Long? = null,
+data class RegisterCardRequest(
     val memberId: Long,
     val cardNum: String,
     val cardPassword: String,
     val expirationDate: String,
     val cvc: Int,
     val bankName: String,
-    var isDefault: Boolean,
-    val isVerified: Boolean,
+    val isDefault: Boolean,
 )

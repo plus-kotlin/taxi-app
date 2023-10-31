@@ -1,7 +1,6 @@
 package com.plus.taxiapp.infra.store.member
 
 import com.plus.taxiapp.domain.member.Member
-import com.plus.taxiapp.domain.member.PaymentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,8 +18,6 @@ class MemberRepositoryImplTest @Autowired constructor(
     private val member = Member(
         id = 1,
         name = "최원빈",
-        defaultPaymentType = PaymentType.ACCOUNT,
-        defaultPaymentId = 1,
     )
     private lateinit var memberEntity: MemberEntity
     @BeforeEach
@@ -31,11 +28,4 @@ class MemberRepositoryImplTest @Autowired constructor(
             )
         )
     }
-
-    @Test
-    fun `updateDefaultPayment(), 기본 결제 방법 업데이트`() {
-        val returnMember = memberRepositoryImpl.updateDefaultPayment(1, PaymentType.ACCOUNT, 1)
-        assertThat(returnMember).isEqualTo(member)
-    }
-
 }

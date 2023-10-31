@@ -1,7 +1,7 @@
 package com.plus.taxiapp.infra.store.payment
 
+import com.plus.taxiapp.domain.payment.card.Card
 import com.plus.taxiapp.infra.store.base.TimeEntity
-import com.plus.taxiapp.infra.store.member.MemberEntity
 import jakarta.persistence.*
 
 @Entity
@@ -14,9 +14,32 @@ class CardEntity(
     var expirationDate: String,
     var cvc: Int,
     var bankName: String,
-    var isDefault: Boolean,
     var isVerified: Boolean,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    val memberEntity: MemberEntity,
-): TimeEntity()
+) : TimeEntity() {
+    fun toDomain(): Card {
+        return Card(
+            id = this.id,
+            cardNum = this.cardNum,
+            cardPassword = this.cardPassword,
+            expirationDate = this.expirationDate,
+            cvc = this.cvc,
+            bankName = this.bankName,
+            isVerified = this.isVerified,
+        )
+    }
+
+    companion object {
+        fun of(
+            card: Card
+        ): CardEntity {
+            return CardEntity(
+                cardNum = card.cardNum,
+                cardPassword = card.cardPassword,
+                expirationDate = card.expirationDate,
+                cvc = card.cvc,
+                bankName = card.bankName,
+                isVerified = card.isVerified,
+            )
+        }
+    }
+}

@@ -1,7 +1,5 @@
 package com.plus.taxiapp.domain.payment
 
-import com.plus.taxiapp.domain.payment.account.Account
-import com.plus.taxiapp.domain.payment.card.Card
 import com.plus.taxiapp.domain.payment.command.PaymentMethodCommand
 import com.plus.taxiapp.domain.payment.paymentMethod.PaymentMethod
 import com.plus.taxiapp.infra.client.ValidationClient
@@ -18,46 +16,22 @@ class PaymentMethodService(
 
     @Transactional
     fun addPaymentMethod(command: PaymentMethodCommand.Add): PaymentMethod {
-        val (memberId, paymentMethodType, accountInfo, cardInfo, isDefault) = command
+        val (memberId, paymentMethodType, accountInfo, cardInfo) = command
         val newPaymentMethod = when (paymentMethodType) {
-            PaymentMethod.Type.ACCOUNT -> PaymentMethod(
-                memberId = memberId,
-                paymentMethodType = PaymentMethod.Type.ACCOUNT,
-                card = null,
-                account = accountInfo?.let {
-                    Account(
-                        accountNum = it.accountNum,
-                        accountPassword = it.accountPassword,
-                        accountHolder = it.accountHolder,
-                        accountHolderInfo = it.accountHolderInfo,
-                        bankName = it.bankName,
-                        isVerified = validationClient.validationAccount(it.accountNum, it.accountPassword),
+            PaymentMethod.Type.ACCOUNT ->
+                accountInfo?.let {
+                    PaymentMethod.of(
+                        command,
+                        validationClient.validateAccount(it.accountNum, it.accountPassword)
                     )
-                },
-                isDefault = isDefault,
-            )
-
-            PaymentMethod.Type.CARD -> PaymentMethod(
-                memberId = memberId,
-                paymentMethodType = PaymentMethod.Type.ACCOUNT,
-                card = cardInfo?.let {
-                    Card(
-                        cardNum = it.cardNum,
-                        cardPassword = it.cardPassword,
-                        expirationDate = it.expirationDate,
-                        cvc = it.cvc,
-                        bankName = it.bankName,
-                        isVerified = validationClient.validationCard(
-                            it.cardNum,
-                            it.cardPassword,
-                            it.cvc,
-                            it.expirationDate
-                        ),
+                } ?: throw NullPointerException("Not Found Account Info")
+            PaymentMethod . Type . CARD ->
+                cardInfo?.let {
+                    PaymentMethod.of(
+                        command,
+                        validationClient.validateCard(it.cardNum, it.cardPassword, it.cvc, it.expirationDate)
                     )
-                },
-                account = null,
-                isDefault = isDefault,
-            )
+                } ?: throw NullPointerException("Not Found Card Info")
         }
 
         val paymentMethods = paymentMethodRepository.findPaymentMethodsByMemberId(memberId)

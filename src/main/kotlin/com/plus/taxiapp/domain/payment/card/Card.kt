@@ -1,5 +1,7 @@
 package com.plus.taxiapp.domain.payment.card
 
+import com.plus.taxiapp.domain.payment.command.PaymentMethodCommand
+
 data class Card(
     val id: Long? = null,
     val cardNum: String,
@@ -15,6 +17,22 @@ data class Card(
             cardPassword.isBlank() -> throw IllegalArgumentException("Card Password is Required")
             expirationDate.isBlank() -> throw IllegalArgumentException("Expiration Date is Required")
             bankName.isBlank() -> throw IllegalArgumentException("Bank Name is Required")
+        }
+    }
+
+    companion object {
+        fun of(
+            it: PaymentMethodCommand.CardInfo,
+            isVerified: Boolean,
+        ): Card {
+            return Card(
+                cardNum = it.cardNum,
+                cardPassword = it.cardPassword,
+                expirationDate = it.expirationDate,
+                cvc = it.cvc,
+                bankName = it.bankName,
+                isVerified = isVerified,
+            )
         }
     }
 }

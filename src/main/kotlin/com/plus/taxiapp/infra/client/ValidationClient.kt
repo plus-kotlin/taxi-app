@@ -7,12 +7,12 @@ import java.util.logging.Logger
 class ValidationClient(
     private val logger: Logger = Logger.getLogger("Validation Middle Ware"),
 ) {
-    fun validationAccount(accountNum: String, accountPassword: String): Boolean {
+    fun validateAccount(accountNum: String, accountPassword: String): Boolean {
         logger.info("Validation Account")
         return true
     }
 
-    fun validationCard(cardNum: String, cardPassword: String, cvc: Int, expiredDate: String): Boolean {
+    fun validateCard(cardNum: String, cardPassword: String, cvc: Int, expiredDate: String): Boolean {
         logger.info("Validation Card")
         return true
     }

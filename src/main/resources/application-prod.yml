@@ -2,7 +2,7 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     open-in-view: false
     properties:
       hibernate:
@@ -14,9 +14,9 @@ spring:
     username: ENC(RsAB6fWoyYA8PwZf2aWlow==)
     password: ENC(MTYv5eF1SC4O9n7IqPTUxJwG77Va2sp/)
     driver-class-name: com.mysql.cj.jdbc.Driver
-  sql:
-    init:
-      mode: always
+#  sql:
+#    init:
+#      mode: always
 
 kakao:
   rest:

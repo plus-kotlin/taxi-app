@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <property name="LOG_PATTERN" value="%green(%d{yy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%5level) %cyan(%logger{40}) [TRACE-ID: %X{traceId}] %yellow(%msg%n)" />
+    <property name="FILE_LOG_PATTERN" value="%d{yy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger{40} [TRACE-ID: %X{traceId}] %msg%n" />
+
+    <springProfile name="local">
+        <include resource="console-appender.xml"/>
+        <logger name="com.plus.taxiapp" level="DEBUG" />
+        <root level="INFO">
+            <appender-ref ref="LOG_CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <include resource="file-appender.xml"/>
+        <include resource="file-error-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="LOG_FILE" />
+        </root>
+        <root level="ERROR">
+            <appender-ref ref="LOG_FILE_ERROR" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <include resource="aws-cloud-watch-appender.xml"/>
+        <include resource="file-error-appender.xml"/>
+        <root level="ERROR">
+            <appender-ref ref="LOG_AWS" />
+            <appender-ref ref="LOG_FILE_ERROR" />
+        </root>
+        <root level="WARN">
+            <appender-ref ref="LOG_AWS" />
+        </root>
+    </springProfile>
+</configuration>

@@ -15,7 +15,7 @@ import java.util.*
 class TraceIdFilter : Filter {
 
     companion object {
-        private val log = LoggerFactory.getLogger(TraceIdFilter::class.java)
+        private val logger = LoggerFactory.getLogger(TraceIdFilter::class.java)
     }
 
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
@@ -26,10 +26,10 @@ class TraceIdFilter : Filter {
             val httpRequest = request as HttpServletRequest
             val httpResponse = response as HttpServletResponse
 
-            log.info("REQUEST TRACING_ID: {}, Method: {}, URI: {}", traceId, httpRequest.method, httpRequest.requestURI)
+            logger.info("REQUEST TRACING_ID: {}, Method: {}, URI: {}", traceId, httpRequest.method, httpRequest.requestURI)
             chain.doFilter(request, response)
             System.out.println("##### TraceIdFilter is called!")
-            log.info("RESPONSE TRACING_ID: {}, Status: {}", traceId, httpResponse.status)
+            logger.info("RESPONSE TRACING_ID: {}, Status: {}", traceId, httpResponse.status)
         } else {
             chain.doFilter(request, response)
         }

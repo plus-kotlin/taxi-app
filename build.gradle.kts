@@ -33,11 +33,7 @@ object Versions{
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web") {
-        exclude(module= "spring-boot-starter-tomcat")
-    }
-    implementation("org.springframework.boot:spring-boot-starter-undertow")
-
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
@@ -59,8 +55,8 @@ dependencies {
 
     implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
 
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+    implementation(group = "ca.pjer", name = "logback-awslogs-appender", version = "1.6.0")
+    implementation("org.codehaus.janino:janino:3.1.7")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

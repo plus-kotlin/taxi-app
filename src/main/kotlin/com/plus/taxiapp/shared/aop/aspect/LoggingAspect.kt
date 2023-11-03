@@ -1,24 +1,24 @@
 package com.plus.taxiapp.shared.aop.aspect
 
-import lombok.extern.slf4j.Slf4j
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
-import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.stereotype.Component
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @Aspect
 @Component
-@Slf4j
 class LoggingAspect {
+    private val logger: Logger = LoggerFactory.getLogger(LoggingAspect::class.java)
 
     @Before("execution(* com.plus.taxiapp..*.*(..))")
     fun beforeMethodCall(joinPoint: JoinPoint) {
         val methodName = joinPoint.signature.name
         val args = joinPoint.args.joinToString(", ") // 모든 인자를 문자열로 변환
 
-        log.info("[$methodName] called with args: $args")
+        logger.info("[$methodName] called with args: $args")
     }
 
     @AfterReturning(pointcut = "execution(* com.plus.taxiapp..*.*(..))", returning = "result")
@@ -26,7 +26,7 @@ class LoggingAspect {
         val methodName = joinPoint.signature.name
         val args = joinPoint.args.joinToString(", ")
 
-        log.info("[$methodName] called with args: $args, returned: $result")
+        logger.info("[$methodName] called with args: $args, returned: $result")
     }
 
 }
